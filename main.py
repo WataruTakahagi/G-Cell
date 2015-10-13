@@ -20,36 +20,48 @@ from functions import Simulation
 print RED+"This is whole-ecoli replication"+ENDC
 
 #Sequence data
-seq,mod,time = Reactions().Readseq('sequence.txt')
+seq,mod,time = Reactions().Readseq('seqtest.txt')
 print GREEN+"time"+ENDC+" = "+BLUE+`time`+ENDC
-print mod
+#print mod
 #Substance setting
 SubList = []
-SubList.append(Reactions().Generate('dnaA',100))
-SubList.append(Reactions().Generate('dnaB',100))
-SubList.append(Reactions().Generate('dnaC',200))
-SubList.append(Reactions().Generate('dnaG',0))
-SubList.append(Reactions().Generate('RNaseH',0))
-SubList.append(Reactions().Generate('SSB',0))
-SubList.append(Reactions().Generate('Topo1',0))
-SubList.append(Reactions().Generate('SDC',0))
-SubList.append(Reactions().Generate('DNApol1',0))
-SubList.append(Reactions().Generate('DNApol3',0))
-SubList.append(Reactions().Generate('DNApol3holoenzyme',0))
-SubList.append(Reactions().Complex('dnaA','dnaB',20))
-SubList.append(Reactions().Complex('dnaA','ATP',20))
+SubList.append(Reactions().Generate('dnaA',100))            #0
+SubList.append(Reactions().Generate('dnaB',100))            #1
+SubList.append(Reactions().Generate('dnaC',200))            #2
+SubList.append(Reactions().Generate('dnaG',0))              #3
+SubList.append(Reactions().Generate('RNaseH',0))            #4
+SubList.append(Reactions().Generate('SSB',0))               #5
+SubList.append(Reactions().Generate('Topo1',0))             #6
+SubList.append(Reactions().Generate('SDC',0))               #7
+SubList.append(Reactions().Generate('DNApol1',0))           #8
+SubList.append(Reactions().Generate('DNApol3',0))           #9
+SubList.append(Reactions().Generate('DNApol3holoenzyme',0)) #10
+SubList.append(Reactions().Generate('OriC9',5))             #11
+SubList.append(Reactions().Generate('OriC13',3))            #12
+SubList.append(Reactions().Complex('dnaB','dnaC',20))       #13
+SubList.append(Reactions().Complex('dnaA','dnaB/dnaC',0))   #14
+SubList.append(Reactions().Complex('dnaA','ATP',20))        #15
+SubList.append(Reactions().Complex('OriC9','dnaA',0))       #16
+SubList.append(Reactions().Complex('OriC13','dnaA',0))      #17
 
-for i in range(50):
-    SubList = Reactions().Compose(SubList,'dnaA','dnaB',0.05)
-for i in range(50):
-    SubList = Reactions().Decompose(SubList,'dnaA/dnaB',5.00)
+#for i in range(50):
+#    SubList = Reactions().Compose(SubList,'dnaA','dnaB',0.05)
+#for i in range(50):
+#    SubList = Reactions().Decompose(SubList,'dnaA/dnaB',5.00)
 
 #Initiation
 #Reactions().Compose(SubList,'dnaA','dnaB',0.05)
 
 #Enzyme setting
+for i in mod:
+    print i
+print
 #Enzyme().dnaA(0,1,100)
-#Enzyme().dnaB(0,1,200)
+for location in range(10):
+    Enzyme().dnaB(location,mod,SubList,1)
+for i in mod:
+    print i
+print SubList
 #Enzyme().dnaC(0,1,300)
 #Enzyme().dnaG(0,1,400)
 #Enzyme().RNaseH(0,1,100)

@@ -2,6 +2,7 @@
 
 import sys
 import math
+import re
 from numpy.random import *
 BLUE = '\033[94m'
 GREEN = '\033[92m'
@@ -16,9 +17,11 @@ class Reactions():
     def Readseq(self, readseq):
         seq = open(readseq)
         self.f = seq.read()
-        self.m = ''
-        #for i in range(len(self.f)):
-        #    self.m = self.m + '0'
+        self.m = []
+        for i in range(len(self.f)):
+            self.m.append([0,0,0,0,0])
+        #self.m = re.sub(r'[a-z]',list(00),self.f)
+        #self.m = list(self.m)
         return self.f,self.m,self.time
 
     def Generate(self,name,num):
@@ -80,8 +83,10 @@ class Enzyme():
     def dnaA(self, time, state, k):
         return
 
-    def dnaB(self, time, state, k):
-        return
+    def dnaB(self, location, mseq, state, k):
+        mseq[location][0] = 1
+        state[1][1] -= 1
+        return location, mseq, state
 
     def dnaC(self, time, state, k):
         return
