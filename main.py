@@ -9,12 +9,15 @@ ENDC = '\033[0m'
 #import public module
 import sys
 import math
+import re
 import numpy as np
 import matplotlib.pyplot as plt
+from numpy.random import *
 
 #import whole-ecoli replication module
 from functions import Reactions
 from functions import Enzyme
+from functions import Propensity
 from functions import Simulation
 
 print RED+"This is whole-ecoli replication"+ENDC
@@ -22,9 +25,9 @@ print RED+"This is whole-ecoli replication"+ENDC
 #Sequence data
 seq,mod,time = Reactions().Readseq('seqtest.txt')
 print GREEN+"time"+ENDC+" = "+BLUE+`time`+ENDC
-#print mod
+
 #Substance setting
-SubList = []
+SubList = []                                                #ID
 SubList.append(Reactions().Generate('dnaA',100))            #0
 SubList.append(Reactions().Generate('dnaB',100))            #1
 SubList.append(Reactions().Generate('dnaC',200))            #2
@@ -34,13 +37,13 @@ SubList.append(Reactions().Generate('SSB',0))               #5
 SubList.append(Reactions().Generate('Topo1',0))             #6
 SubList.append(Reactions().Generate('SDC',0))               #7
 SubList.append(Reactions().Generate('DNApol1',0))           #8
-SubList.append(Reactions().Generate('DNApol3',0))           #9
+SubList.append(Reactions().Generate('DNApol3',100))         #9
 SubList.append(Reactions().Generate('DNApol3holoenzyme',0)) #10
 SubList.append(Reactions().Generate('OriC9',5))             #11
 SubList.append(Reactions().Generate('OriC13',3))            #12
-SubList.append(Reactions().Complex('dnaB','dnaC',20))       #13
+SubList.append(Reactions().Complex('dnaB','dnaC',0))        #13
 SubList.append(Reactions().Complex('dnaA','dnaB/dnaC',0))   #14
-SubList.append(Reactions().Complex('dnaA','ATP',20))        #15
+SubList.append(Reactions().Complex('dnaA','ATP',0))         #15
 SubList.append(Reactions().Complex('OriC9','dnaA',0))       #16
 SubList.append(Reactions().Complex('OriC13','dnaA',0))      #17
 
@@ -52,25 +55,22 @@ SubList.append(Reactions().Complex('OriC13','dnaA',0))      #17
 #Initiation
 #Reactions().Compose(SubList,'dnaA','dnaB',0.05)
 
-#Enzyme setting
+
 for i in mod:
     print i
 print
-#Enzyme().dnaA(0,1,100)
-for location in range(10):
+r = [0]
+i = 0
+time = []
+er = []
+for location in range(50):
     Enzyme().dnaB(location,mod,SubList,1)
+for location in range(50):
+    Enzyme().DNApol3(location,mod,SubList,1,r)
+    time.append(i)
+    er.append(r[0])
+    i += 1
 for i in mod:
     print i
-print SubList
-#Enzyme().dnaC(0,1,300)
-#Enzyme().dnaG(0,1,400)
-#Enzyme().RNaseH(0,1,100)
-#Enzyme().SSB(0,1,100)
-#Enzyme().Topo1(0,1,100)
-#Enzyme().SDC(0,1,100)
-#Enzyme().DNApol1(0,1,200)
-#Enzyme().DNApol3(0,1,100)
-#Enzyme().DNApol3holoenzyme(0,1,100)
-
-#Initiation
-Enzyme().dnaA(0,1,100)
+plt.plot(time,er)
+plt.show()

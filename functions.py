@@ -19,9 +19,7 @@ class Reactions():
         self.f = seq.read()
         self.m = []
         for i in range(len(self.f)):
-            self.m.append([0,0,0,0,0])
-        #self.m = re.sub(r'[a-z]',list(00),self.f)
-        #self.m = list(self.m)
+            self.m.append([0,0,0,0,0,0,0,0,0,0,self.f[i],''])
         return self.f,self.m,self.time
 
     def Generate(self,name,num):
@@ -80,13 +78,76 @@ class Enzyme():
     def __init__(self):
         pass
 
-    def dnaA(self, time, state, k):
+    def dnaA(self, location, mseq, state, k):
         return
 
     def dnaB(self, location, mseq, state, k):
         mseq[location][0] = 1
         state[1][1] -= 1
         return location, mseq, state
+
+    def dnaC(self, time, state, k):
+        return
+
+    def dnaG(self, time, state, k):
+        return
+
+    def RNaseH(self, time, state, k):
+        return
+
+    def SSB(self, time, state, k):
+        return
+
+    def Topo1(self, time, state, k):
+        return
+
+    def SDC(self, time, state, k):
+        return
+
+    def DNApol1(self, time, state, k):
+        return
+
+    def DNApol3(self, location, mseq, state, k, r):
+        if mseq[location][0] == 1:
+            mseq[location][1] = 1
+            state[9][1] -= 1
+            error = 10#%
+            rate = rand()*100
+            if mseq[location][10]=='a':
+                if rate >= error:mseq[location][11]='t'
+                else:
+                    mseq[location][11]='miss'
+                    r[0] += 1
+            if mseq[location][10]=='t':
+                if rate >= error:mseq[location][11]='a'
+                else:
+                    mseq[location][11]='miss'
+                    r[0] += 1
+            if mseq[location][10]=='g':
+                if rate >= error:mseq[location][11]='c'
+                else:
+                    mseq[location][11]='miss'
+                    r[0] += 1
+            if mseq[location][10]=='c':
+                if rate >= error:mseq[location][11]='g'
+                else:
+                    mseq[location][11]='miss'
+                    r[0] += 1
+            location += 1
+        return location, mseq, state, k, r
+
+    def DNApol3holoenzyme(self, time, state, k):
+        return
+
+class Propensity:
+    def __init__(self):
+        pass
+
+    def dnaA(self, location, mseq, state, k):
+        return
+
+    def dnaB(self, location, mseq, state, k):
+        return
 
     def dnaC(self, time, state, k):
         return
@@ -117,7 +178,8 @@ class Enzyme():
 
 class Simulation:
     def __init__(self):
-        pass
+        import Reactions
+        import Enzyme
 
     def Propensity(self, state, k):
         pass
