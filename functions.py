@@ -1,25 +1,34 @@
 #!/usr/bin/env python
-
-import sys
-import math
-import re
-from numpy.random import *
+#color setting
 BLUE = '\033[94m'
 GREEN = '\033[92m'
 YELLOW = '\033[93m'
 RED = '\033[91m'
 ENDC = '\033[0m'
 
+#import public module
+import sys
+import math
+import re
+import csv
+import os
+import shutil
+import numpy as np
+import matplotlib.pyplot as plt
+from numpy.random import *
+
+#General reactions
 class Reactions():
     def __init__(self,time=0):
         self.time = time
 
-    def Readseq(self, readseq):
+    def Readseq(self, readseq='sequence.txt'):
         seq = open(readseq)
         self.f = seq.read()
         self.m = []
         for i in range(len(self.f)):
             self.m.append([0,0,0,0,0,0,0,0,0,0,self.f[i],''])
+        #ds,dnaA,dnaB,dnaC,dnaG,SSB,Topo1,SDC,DNApol1,DNApol3
         return self.f,self.m,self.time
 
     def Generate(self,name,num):
@@ -102,16 +111,18 @@ class Enzyme():
         return
 
     def SDC(self, time, state, k):
-        return
+        mseq[location][7] = 1
+        state[7][1] -= 1
+        return location, mseq, state
 
     def DNApol1(self, time, state, k):
         return
 
     def DNApol3(self, location, mseq, state, k, r):
         if mseq[location][0] == 1:
-            mseq[location][1] = 1
+            mseq[location][9] = 1
             state[9][1] -= 1
-            error = 10#%
+            error = 0.001#%
             rate = rand()*100
             if mseq[location][10]=='a':
                 if rate >= error:mseq[location][11]='t'
@@ -133,6 +144,7 @@ class Enzyme():
                 else:
                     mseq[location][11]='miss'
                     r[0] += 1
+            mseq[location][0] = 0
             location += 1
         return location, mseq, state, k, r
 
@@ -178,8 +190,7 @@ class Propensity:
 
 class Simulation:
     def __init__(self):
-        import Reactions
-        import Enzyme
+        Propensity().dnaA(1,1,1,1)
 
     def Propensity(self, state, k):
         pass
@@ -189,3 +200,17 @@ class Simulation:
         alist = []
         for i in range(len(events)):
             atotal += events[i]
+
+    def Makedata(self, dirname="result"):
+        if os.path.exists(os.getcwd()+"/"+dirname):
+            swt = 1
+            print BLUE+dirname+RED+" already exists !!"+ENDC
+            dirname = raw_input(YELLOW+"Please input other name : "+ENDC)
+            while swt == 1:
+                if os.path.exists(os.getcwd()+"/"+dirname):
+                    dirname = raw_input(RED+"ERROR "+GREEN+"Please input other name : "+ENDC)
+                else:
+                    break
+        os.mkdir(dirname)
+        if os.path.exists(os.getcwd()+'/error.png'): shutil.move('error.png',os.getcwd()+"/"+dirname)
+        if os.path.exists(os.getcwd()+'/result.txt'): shutil.move('result.txt',os.getcwd()+"/"+dirname)

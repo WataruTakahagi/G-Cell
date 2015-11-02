@@ -10,6 +10,9 @@ ENDC = '\033[0m'
 import sys
 import math
 import re
+import csv
+import os
+import shutil
 import numpy as np
 import matplotlib.pyplot as plt
 from numpy.random import *
@@ -23,7 +26,7 @@ from functions import Simulation
 print RED+"This is whole-ecoli replication"+ENDC
 
 #Sequence data
-seq,mod,time = Reactions().Readseq('seqtest.txt')
+seq,mod,time = Reactions().Readseq('sequence.txt')
 print GREEN+"time"+ENDC+" = "+BLUE+`time`+ENDC
 
 #Substance setting
@@ -52,25 +55,30 @@ SubList.append(Reactions().Complex('OriC13','dnaA',0))      #17
 #for i in range(50):
 #    SubList = Reactions().Decompose(SubList,'dnaA/dnaB',5.00)
 
-#Initiation
-#Reactions().Compose(SubList,'dnaA','dnaB',0.05)
-
-
-for i in mod:
-    print i
-print
+#for i in mod:
+#    print i
+#print
 r = [0]
 i = 0
 time = []
 er = []
-for location in range(50):
+process = len(seq)
+for location in range(process):
     Enzyme().dnaB(location,mod,SubList,1)
-for location in range(50):
+for location in range(process):
     Enzyme().DNApol3(location,mod,SubList,1,r)
     time.append(i)
     er.append(r[0])
     i += 1
-for i in mod:
-    print i
-plt.plot(time,er)
-plt.show()
+
+#Save result
+plt.plot(time,er,'b',label="ERROR BASE")
+plt.xlabel("Time[s]", fontsize=12)
+plt.ylabel("ERROR BASE", fontsize=12)
+plt.title("Error Accumulation", fontsize=14)
+plt.savefig("error.png")
+result = open('result.txt', 'w')
+for line in mod:
+    result.write(str(line)+'\n')
+result.close()
+Simulation().Makedata()
