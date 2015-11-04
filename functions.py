@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+
 #color setting
 BLUE = '\033[94m'
 GREEN = '\033[92m'
@@ -18,7 +19,7 @@ import matplotlib.pyplot as plt
 from numpy.random import *
 
 #General reactions
-class Reactions():
+class Reactions:
     def __init__(self,time=0):
         self.time = time
 
@@ -46,83 +47,166 @@ class Reactions():
         print "{:<27}".format(RED+self.Cname+ENDC)+" = "+BLUE+`self.num`+ENDC
         return [self.Cname,self.num]
 
-    def Compose(self, list, csubA, csubB, k):
-        self.Complex = str(csubA+"/"+csubB)
+class Compose:
+    def __init__(self, csubA, csubB):
+        self.csubA = csubA
+        self.csubB = csubB
+
+    def propensity(self, state, k):
         self.k = k
-        for i in range(len(list)):
-            if list[i][0] == str(csubA):
-                self.a = list[i][1]
-                list[i][1] = list[i][1] - 1
-                print "["+GREEN+str(list[i][0])+ENDC+","+BLUE+str(list[i][1])+ENDC+"]",
-            if list[i][0] == str(csubB):
-                self.b = list[i][1]
-                list[i][1] = list[i][1] - 1
-                print "["+GREEN+str(list[i][0])+ENDC+","+BLUE+str(list[i][1])+ENDC+"]",
-            if list[i][0] == self.Complex:
-                list[i][1] = list[i][1] + 1
-                print "["+GREEN+str(list[i][0])+ENDC+","+RED+str(list[i][1])+ENDC+"]",
-        print ENDC
+        for i in range(len(state)):
+            if state[i][0] == str(self.csubA): self.a = state[i][1]
+            if state[i][0] == str(self.csubB): self.b = state[i][1]
         self.p = self.k * self.a * self.b
-        return list
+        return self.p
 
-    def Decompose(self, list, dsubAB,k):
-        self.Complex = dsubAB.split('/')
-        self.k = k
-        for i in range(len(list)):
-            if list[i][0] == str(self.Complex[0]):
-                list[i][1] = list[i][1] + 1
-                print "["+GREEN+str(list[i][0])+ENDC+","+RED+str(list[i][1])+ENDC+"]",
-            if list[i][0] == str(self.Complex[1]):
-                list[i][1] = list[i][1] + 1
-                print "["+GREEN+str(list[i][0])+ENDC+","+RED+str(list[i][1])+ENDC+"]",
-            if list[i][0] == dsubAB:
-                self.ab = list[i][1]
-                list[i][1] = list[i][1] - 1
-                print "["+GREEN+str(list[i][0])+ENDC+","+BLUE+str(list[i][1])+ENDC+"]",
+    def execute(self, state):
+        self.Complex = str(self.csubA+'/'+self.csubB)
+        for i in range(len(state)):
+            if state[i][0] == str(self.csubA):
+                state[i][1] = state[i][1] - 1
+                print '['+GREEN+str(state[i][0])+ENDC+','+BLUE+str(state[i][1])+ENDC+']',
+            if state[i][0] == str(self.csubB):
+                state[i][1] = state[i][1] - 1
+                print '['+GREEN+str(state[i][0])+ENDC+','+BLUE+str(state[i][1])+ENDC+']',
+            if state[i][0] == self.Complex:
+                state[i][1] = state[i][1] + 1
+                print '['+GREEN+str(state[i][0])+ENDC+','+RED+str(state[i][1])+ENDC+']',
         print ENDC
-        self.p = self.k * self.ab
-        return list
+        return state
 
-class Enzyme():
+class Decompose:
+    def __init__(self, dsubAB):
+        self.dsubAB = dsubAB
+        self.Complex = dsubAB.split('/')
+
+    def propensity(self, state, k):
+        self.k = k
+        for i in range(len(state)):
+            if state[i][0] == str(self.dsubAB): self.ab = state[i][1]
+        self.p = self.k * self.ab
+        return self.p
+
+    def execute(self, state):
+        for i in range(len(state)):
+            if state[i][0] == str(self.Complex[0]):
+                state[i][1] = state[i][1] + 1
+                print "["+GREEN+str(state[i][0])+ENDC+","+RED+str(state[i][1])+ENDC+"]",
+            if state[i][0] == str(self.Complex[1]):
+                state[i][1] = state[i][1] + 1
+                print "["+GREEN+str(state[i][0])+ENDC+","+RED+str(state[i][1])+ENDC+"]",
+            if state[i][0] == self.dsubAB:
+                state[i][1] = state[i][1] - 1
+                print "["+GREEN+str(state[i][0])+ENDC+","+BLUE+str(state[i][1])+ENDC+"]",
+        print ENDC
+        return state
+
+class dnaA:
     def __init__(self):
         pass
 
-    def dnaA(self, location, mseq, state, k):
+    def propensity(self, state, k):
         return
 
-    def dnaB(self, location, mseq, state, k):
+    def execute(self, state):
+        return
+
+class dnaB:
+    def __init__(self):
+        pass
+
+    def propensity(self, state, k):
+        return
+
+    def execute(self, location, mseq, state):
         mseq[location][0] = 1
         state[1][1] -= 1
         return location, mseq, state
 
-    def dnaC(self, time, state, k):
+class dnaC:
+    def __init__(self):
+        pass
+
+    def propensity(self, state, k):
         return
 
-    def dnaG(self, time, state, k):
+    def execute(self, state):
         return
 
-    def RNaseH(self, time, state, k):
+class dnaG:
+    def __init__(self):
+        pass
+
+    def propensity(self, state, k):
         return
 
-    def SSB(self, time, state, k):
+    def execute(self, state):
         return
 
-    def Topo1(self, time, state, k):
+class RNaseH:
+    def __init__(self):
+        pass
+
+    def propensity(self, state, k):
         return
 
-    def SDC(self, time, state, k):
+    def execute(self, state):
+        return
+
+class SSB:
+    def __init__(self):
+        pass
+
+    def propensity(self, state, k):
+        return
+
+    def execute(self, state):
+        return
+
+class Topo1:
+    def __init__(self):
+        pass
+
+    def propensity(self, state, k):
+        return
+
+    def execute(self, state):
+        return
+
+class SDC:
+    def __init__(self):
+        pass
+
+    def propensity(self, state, k):
+        return
+
+    def execute(self, state):
         mseq[location][7] = 1
         state[7][1] -= 1
         return location, mseq, state
 
-    def DNApol1(self, time, state, k):
+class DNApol1:
+    def __init__(self):
+        pass
+
+    def propensity(self, state, k):
         return
 
-    def DNApol3(self, location, mseq, state, k, r):
+    def execute(self, state):
+        return
+
+class DNApol3:
+    def __init__(self):
+        pass
+
+    def propensity(self, state, k):
+        return
+
+    def execute(self, location, mseq, state, r):
         if mseq[location][0] == 1:
             mseq[location][9] = 1
             state[9][1] -= 1
-            error = 0.001#%
+            error = 0.001#ERROR RATE(%)
             rate = rand()*100
             if mseq[location][10]=='a':
                 if rate >= error:mseq[location][11]='t'
@@ -146,71 +230,62 @@ class Enzyme():
                     r[0] += 1
             mseq[location][0] = 0
             location += 1
-        return location, mseq, state, k, r
+        return location, mseq, state, r
 
-    def DNApol3holoenzyme(self, time, state, k):
-        return
-
-class Propensity:
+class DNApol3holoenzyme:
     def __init__(self):
         pass
 
-    def dnaA(self, location, mseq, state, k):
+    def propensity(self, state, k):
         return
 
-    def dnaB(self, location, mseq, state, k):
-        return
-
-    def dnaC(self, time, state, k):
-        return
-
-    def dnaG(self, time, state, k):
-        return
-
-    def RNaseH(self, time, state, k):
-        return
-
-    def SSB(self, time, state, k):
-        return
-
-    def Topo1(self, time, state, k):
-        return
-
-    def SDC(self, time, state, k):
-        return
-
-    def DNApol1(self, time, state, k):
-        return
-
-    def DNApol3(self, time, state, k):
-        return
-
-    def DNApol3holoenzyme(self, time, state, k):
+    def execute(self, state):
         return
 
 class Simulation:
     def __init__(self):
-        Propensity().dnaA(1,1,1,1)
-
-    def Propensity(self, state, k):
         pass
 
-    def Step(self, time, state, events):
+    def Step(self, time, state, events, k):
         atotal = 0
         alist = []
         for i in range(len(events)):
-            atotal += events[i]
+                atotal += events[i].propensity(state, k[i])
+                alist.append(events[i].propensity(state, k[i]))
+        tau = float((1/atotal)*math.log1p(1/rand()))
+        newt = time + tau
+        a0, l = 0, 0
+        r = rand()*atotal
+        for a in alist:
+            a0 += a
+            if a0 > r: j = l
+            else: l += 1
+        news = events[j].execute(state)
+        return newt, news
+
+    def Wcplot(self, time, data):
+        plt.plot(time, data, 'b', label="ERROR BASE")
+        plt.xlabel("Time[s]", fontsize=12)
+        plt.ylabel("ERROR BASE", fontsize=12)
+        plt.title("Error Accumulation", fontsize=14)
+        plt.savefig("error.png")
+
+    def Wcwrite(self, mod):
+        result = open('result.txt', 'w')
+        for line in mod:
+            result.write(str(line)+'\n')
+        result.close()
 
     def Makedata(self, dirname="result"):
-        if os.path.exists(os.getcwd()+"/"+dirname):
+        pwd = os.getcwd()
+        if os.path.exists(pwd+"/"+dirname):
             swt = 1
             print BLUE+dirname+RED+" already exists !!"+ENDC
             dirname = raw_input(YELLOW+"Please input other name : "+ENDC)
             while swt == 1:
-                if os.path.exists(os.getcwd()+"/"+dirname):
+                if os.path.exists(pwd+"/"+dirname):
                     dirname = raw_input(RED+"ERROR "+GREEN+"Please input other name : "+ENDC)
-                else:
-                    break
+                else: break
         os.mkdir(dirname)
-        if os.path.exists(os.getcwd()+'/error.png'): shutil.move('error.png',os.getcwd()+"/"+dirname)
-        if os.path.exists(os.getcwd()+'/result.txt'): shutil.move('result.txt',os.getcwd()+"/"+dirname)
+        if os.path.exists(pwd+'/error.png'): shutil.move('error.png',pwd+"/"+dirname)
+        if os.path.exists(pwd+'/result.txt'):shutil.move('result.txt',pwd+"/"+dirname)
