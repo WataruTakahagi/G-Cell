@@ -37,7 +37,7 @@ from functions import DNApol1
 from functions import DNApol3
 from functions import DNApol3holoenzyme
 
-print RED+"This is whole-ecoli replication"+ENDC
+print RED+"Genome Based Whole-ecoli Simulation Platform"+ENDC
 
 #Sequence data
 seq,mod,time = Reactions().Readseq('sequence.txt')
@@ -65,14 +65,16 @@ SubList.append(Reactions().Complex('dnaA','ATP',0))           #16
 SubList.append(Reactions().Complex('OriC9','dnaA',0))         #17
 SubList.append(Reactions().Complex('OriC13','dnaA',0))        #18
 
+#Gillespie Test
 t = 0
 tend = 1.0
-k = [0.01,5]
-events = [Compose('dnaB','dnaC'), Decompose('dnaB/dnaC')]
+events1 = [Compose('dnaB','dnaC'), Decompose('dnaB/dnaC')]
+events2 = [Compose('dnaA','dnaB/dnaC'), Decompose('dnaA/dnaB/dnaC')]
 while t <= tend:
-    t, SubList = Simulation().Step(t, SubList, events, k)
+    t, SubList = Simulation().Step(t, SubList, events1, k = [0.01,5])
+    t, SubList = Simulation().Step(t, SubList, events2, k = [0.01,5])
 
-"""
+#Polymerization Process Test
 r = [0]
 i = 0
 time = []
@@ -90,4 +92,3 @@ for location in range(process):
 Simulation().Wcplot(time,er)
 Simulation().Wcwrite(mod)
 Simulation().Makedata()
-"""
