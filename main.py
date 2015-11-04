@@ -58,7 +58,7 @@ SubList.append(Reactions().Generate('DNApol3',100))           #9
 SubList.append(Reactions().Generate('DNApol3holoenzyme',100)) #10
 SubList.append(Reactions().Generate('OriC9',5))               #11
 SubList.append(Reactions().Generate('OriC13',3))              #12
-SubList.append(Reactions().Generate('ATP',100000))            #13
+SubList.append(Reactions().Generate('ATP',10000))            #13
 SubList.append(Reactions().Complex('dnaB','dnaC',0))          #14
 SubList.append(Reactions().Complex('dnaA','dnaB/dnaC',0))     #15
 SubList.append(Reactions().Complex('dnaA','ATP',0))           #16
@@ -67,12 +67,30 @@ SubList.append(Reactions().Complex('OriC13','dnaA',0))        #18
 
 #Gillespie Test
 t = 0
-tend = 1.0
+tend = 1
+otime = [t]
+adata = [SubList[0][1]]
+bdata = [SubList[1][1]]
+cdata = [SubList[2][1]]
+bcdata = [SubList[14][1]]
+abcdata = [SubList[15][1]]
 events1 = [Compose('dnaB','dnaC'), Decompose('dnaB/dnaC')]
 events2 = [Compose('dnaA','dnaB/dnaC'), Decompose('dnaA/dnaB/dnaC')]
 while t <= tend:
     t, SubList = Simulation().Step(t, SubList, events1, k = [0.01,5])
     t, SubList = Simulation().Step(t, SubList, events2, k = [0.01,5])
+    otime.append(t)
+    adata.append(SubList[0][1])
+    bdata.append(SubList[1][1])
+    cdata.append(SubList[2][1])
+    bcdata.append(SubList[14][1])
+    abcdata.append(SubList[15][1])
+plt.plot(otime,adata,label="dnaA")
+plt.plot(otime,bdata,label="dnaB")
+plt.plot(otime,cdata,label="dnaC")
+plt.plot(otime,bcdata,label="dnaB/dnaC")
+plt.plot(otime,abcdata,label="dnaA/dnaB/dnaC")
+plt.show()
 
 #Polymerization Process Test
 r = [0]
