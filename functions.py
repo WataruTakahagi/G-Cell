@@ -30,9 +30,10 @@ class Reactions:
         for i in range(len(self.f)):
             self.m.append([0,0,0,0,0,0,0,0,0,0,self.f[i],''])
         #ds,dnaA,dnaB,dnaC,dnaG,SSB,Topo1,SDC,DNApol1,DNApol3
+        print GREEN+"time"+ENDC+" = "+BLUE+`self.time`+ENDC
         return self.f,self.m,self.time
 
-    def Generate(self,name,num):
+    def Monomer(self,name,num):
         self.name = str(name)
         self.num = num
         print "{:<27}".format(YELLOW+self.name+ENDC)+" = "+BLUE+`self.num`+ENDC
@@ -47,58 +48,45 @@ class Reactions:
         print "{:<27}".format(RED+self.Cname+ENDC)+" = "+BLUE+`self.num`+ENDC
         return [self.Cname,self.num]
 
+    def Getindex(self, name, sublist):
+        for i in range(len(sublist)):
+            if sublist[i][0] == name:
+                return i
+
 class Compose:
-    def __init__(self, csubA, csubB):
+    def __init__(self, csubA, csubB, k):
         self.csubA = csubA
         self.csubB = csubB
-
-    def propensity(self, state, k):
         self.k = k
-        for i in range(len(state)):
-            if state[i][0] == str(self.csubA): self.a = state[i][1]
-            if state[i][0] == str(self.csubB): self.b = state[i][1]
+
+    def propensity(self, state):
+        self.a = state[Reactions().Getindex(self.csubA,state)][1]
+        self.b = state[Reactions().Getindex(self.csubB,state)][1]
         self.p = self.k * self.a * self.b
         return self.p
 
     def execute(self, state):
         self.Complex = str(self.csubA+'/'+self.csubB)
-        for i in range(len(state)):
-            if state[i][0] == str(self.csubA):
-                state[i][1] = state[i][1] - 1
-                print '['+GREEN+str(state[i][0])+ENDC+','+BLUE+str(state[i][1])+ENDC+']',
-            if state[i][0] == str(self.csubB):
-                state[i][1] = state[i][1] - 1
-                print '['+GREEN+str(state[i][0])+ENDC+','+BLUE+str(state[i][1])+ENDC+']',
-            if state[i][0] == self.Complex:
-                state[i][1] = state[i][1] + 1
-                print '['+GREEN+str(state[i][0])+ENDC+','+RED+str(state[i][1])+ENDC+']',
-        print ENDC
+        state[Reactions().Getindex(self.csubA,state)][1] -= 1
+        state[Reactions().Getindex(self.csubB,state)][1] -= 1
+        state[Reactions().Getindex(self.Complex,state)][1] += 1
         return state
 
 class Decompose:
-    def __init__(self, dsubAB):
+    def __init__(self, dsubAB, k):
         self.dsubAB = dsubAB
         self.Complex = dsubAB.split('/')
-
-    def propensity(self, state, k):
         self.k = k
-        for i in range(len(state)):
-            if state[i][0] == str(self.dsubAB): self.ab = state[i][1]
+
+    def propensity(self, state):
+        self.ab = state[Reactions().Getindex(self.dsubAB,state)][1]
         self.p = self.k * self.ab
         return self.p
 
     def execute(self, state):
-        for i in range(len(state)):
-            if state[i][0] == str(self.Complex[0]):
-                state[i][1] = state[i][1] + 1
-                print "["+GREEN+str(state[i][0])+ENDC+","+RED+str(state[i][1])+ENDC+"]",
-            if state[i][0] == str(self.Complex[1]):
-                state[i][1] = state[i][1] + 1
-                print "["+GREEN+str(state[i][0])+ENDC+","+RED+str(state[i][1])+ENDC+"]",
-            if state[i][0] == self.dsubAB:
-                state[i][1] = state[i][1] - 1
-                print "["+GREEN+str(state[i][0])+ENDC+","+BLUE+str(state[i][1])+ENDC+"]",
-        print ENDC
+        state[Reactions().Getindex(self.Complex[0],state)][1] += 1
+        state[Reactions().Getindex(self.Complex[1],state)][1] += 1
+        state[Reactions().Getindex(self.dsubAB,state)][1] -= 1
         return state
 
 class dnaA:
@@ -118,9 +106,18 @@ class dnaB:
     def propensity(self, state, k):
         return
 
+    def walk(self, location, mseq, state):
+        return
+
+    def bind(self, location, mseq, state):
+        return
+
+    def unbind(self, location, mseq, state):
+        return
+
     def execute(self, location, mseq, state):
         mseq[location][0] = 1
-        state[1][1] -= 1
+        state[Reactions().Getindex('dnaB',state)][1] -= 1
         return location, mseq, state
 
 class dnaC:
@@ -182,7 +179,7 @@ class SDC:
 
     def execute(self, state):
         mseq[location][7] = 1
-        state[7][1] -= 1
+        state[Reactions().Getindex('SDC',state)][1] -= 1
         return location, mseq, state
 
 class DNApol1:
@@ -199,7 +196,7 @@ class DNApol3:
     def __init__(self):
         pass
 
-    def propensity(self, state, k):
+    def propensity(self, mseq, state, k):
         return
 
     def execute(self, location, mseq, state, r):
@@ -242,16 +239,47 @@ class DNApol3holoenzyme:
     def execute(self, state):
         return
 
+class Showdata:
+    def __init__(self):
+        pass
+
+    def logger(self, t, sublist, st, et):
+        otime = [t]
+        data = []
+        for i in range(len(sublist)):
+            data.append([sublist[i][1]])
+        self.data = data
+        self.time = otime
+        self.st = st
+        self.et = et
+        return self.time, self.data, self.st, self.et
+
+    def getdata(self, t, sublist, logt, logd):
+        for i in range(len(sublist)):
+            logd[i].append(sublist[i][1])
+        logt.append(t)
+        return logt, logd
+
+    def figure(self, name, logt, logd, sublist):
+        for i in range(len(sublist)):
+            if sublist[i][0] == str(name):
+                plt.plot(logt, logd[i][:], label=sublist[i][0])
+
+    def save(self, name="figure.png"):
+        plt.legend()
+        plt.savefig(name)
+        plt.close()
+
 class Simulation:
     def __init__(self):
         pass
 
-    def Step(self, time, state, events, k):
+    def Step(self, time, state, events):
         atotal = 0
         alist = []
         for i in range(len(events)):
-                atotal += events[i].propensity(state, k[i])
-                alist.append(events[i].propensity(state, k[i]))
+                atotal += events[i].propensity(state)
+                alist.append(events[i].propensity(state))
         tau = float((1/atotal)*math.log1p(1/rand()))
         newt = time + tau
         a0, l = 0, 0
@@ -263,12 +291,19 @@ class Simulation:
         news = events[j].execute(state)
         return newt, news
 
+    def run(self, t, tend, SubList, events, logt, logd):
+        while t <= tend:
+            t, SubList = Simulation().Step(t, SubList, events)
+            logt, logd = Showdata().getdata(t, SubList, logt, logd)
+        return t, SubList, logt, logd
+
     def Wcplot(self, time, data):
         plt.plot(time, data, 'b', label="ERROR BASE")
         plt.xlabel("Time[s]", fontsize=12)
         plt.ylabel("ERROR BASE", fontsize=12)
         plt.title("Error Accumulation", fontsize=14)
         plt.savefig("error.png")
+        plt.close()
 
     def Wcwrite(self, mod):
         result = open('result.txt', 'w')
@@ -289,3 +324,4 @@ class Simulation:
         os.mkdir(dirname)
         if os.path.exists(pwd+'/error.png'): shutil.move('error.png',pwd+"/"+dirname)
         if os.path.exists(pwd+'/result.txt'):shutil.move('result.txt',pwd+"/"+dirname)
+        if os.path.exists(pwd+'/process.png'):shutil.move('process.png',pwd+"/"+dirname)

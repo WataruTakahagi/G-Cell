@@ -20,6 +20,7 @@ from numpy.random import *
 
 #import whole-ecoli replication module
 from functions import Reactions
+from functions import Showdata
 from functions import Simulation
 
 #import functions module
@@ -37,28 +38,27 @@ from functions import DNApol1
 from functions import DNApol3
 from functions import DNApol3holoenzyme
 
-print RED+"Genome Based Whole-ecoli Simulation Platform"+ENDC
+print RED+"Whole-genome based simulation platform of prokaryotic DNA replication"+ENDC
 
 #Sequence data
 seq,mod,time = Reactions().Readseq('sequence.txt')
-print GREEN+"time"+ENDC+" = "+BLUE+`time`+ENDC
 
 #Substance setting
 SubList = []                                                  #ID
-SubList.append(Reactions().Generate('dnaA',60000))            #0
-SubList.append(Reactions().Generate('dnaB',60000))            #1
-SubList.append(Reactions().Generate('dnaC',60000))            #2
-SubList.append(Reactions().Generate('dnaG',20000))            #3
-SubList.append(Reactions().Generate('RNaseH',500))            #4
-SubList.append(Reactions().Generate('SSB',30000))             #5
-SubList.append(Reactions().Generate('Topo1',0))               #6
-SubList.append(Reactions().Generate('SDC',200000))            #7
-SubList.append(Reactions().Generate('DNApol1',0))             #8
-SubList.append(Reactions().Generate('DNApol3',100))           #9
-SubList.append(Reactions().Generate('DNApol3holoenzyme',100)) #10
-SubList.append(Reactions().Generate('OriC9',5))               #11
-SubList.append(Reactions().Generate('OriC13',3))              #12
-SubList.append(Reactions().Generate('ATP',10000))            #13
+SubList.append(Reactions().Monomer('dnaA',60000))             #0
+SubList.append(Reactions().Monomer('dnaB',60000))             #1
+SubList.append(Reactions().Monomer('dnaC',60000))             #2
+SubList.append(Reactions().Monomer('dnaG',20000))             #3
+SubList.append(Reactions().Monomer('RNaseH',500))             #4
+SubList.append(Reactions().Monomer('SSB',30000))              #5
+SubList.append(Reactions().Monomer('Topo1',0))                #6
+SubList.append(Reactions().Monomer('SDC',200000))             #7
+SubList.append(Reactions().Monomer('DNApol1',0))              #8
+SubList.append(Reactions().Monomer('DNApol3',100))            #9
+SubList.append(Reactions().Monomer('DNApol3holoenzyme',100))  #10
+SubList.append(Reactions().Monomer('OriC9',5))                #11
+SubList.append(Reactions().Monomer('OriC13',3))               #12
+SubList.append(Reactions().Monomer('ATP',10000))              #13
 SubList.append(Reactions().Complex('dnaB','dnaC',0))          #14
 SubList.append(Reactions().Complex('dnaA','dnaB/dnaC',0))     #15
 SubList.append(Reactions().Complex('dnaA','ATP',0))           #16
@@ -66,32 +66,16 @@ SubList.append(Reactions().Complex('OriC9','dnaA',0))         #17
 SubList.append(Reactions().Complex('OriC13','dnaA',0))        #18
 
 #Gillespie Test
-t = 0
-tend = 1
-otime = [t]
-adata = [SubList[0][1]]
-bdata = [SubList[1][1]]
-cdata = [SubList[2][1]]
-bcdata = [SubList[14][1]]
-abcdata = [SubList[15][1]]
-events1 = [Compose('dnaB','dnaC'), Decompose('dnaB/dnaC')]
-events2 = [Compose('dnaA','dnaB/dnaC'), Decompose('dnaA/dnaB/dnaC')]
-while t <= tend:
-    t, SubList = Simulation().Step(t, SubList, events1, k = [0.01,5])
-    t, SubList = Simulation().Step(t, SubList, events2, k = [0.01,5])
-    otime.append(t)
-    adata.append(SubList[0][1])
-    bdata.append(SubList[1][1])
-    cdata.append(SubList[2][1])
-    bcdata.append(SubList[14][1])
-    abcdata.append(SubList[15][1])
-plt.plot(otime,adata,label="dnaA")
-plt.plot(otime,bdata,label="dnaB")
-plt.plot(otime,cdata,label="dnaC")
-plt.plot(otime,bcdata,label="dnaB/dnaC")
-plt.plot(otime,abcdata,label="dnaA/dnaB/dnaC")
-plt.show()
-
+logt, logd, t, tend = Showdata().logger(time, SubList, 0, 1)
+events = [Compose('dnaB','dnaC',0.01),Decompose('dnaB/dnaC',5),Compose('dnaA','dnaB/dnaC',0.01),Decompose('dnaA/dnaB/dnaC',4)]
+Simulation().run(t, tend, SubList, events, logt, logd)
+Showdata().figure("dnaA", logt, logd, SubList)
+Showdata().figure("dnaB", logt, logd, SubList)
+Showdata().figure("dnaC", logt, logd, SubList)
+Showdata().figure("dnaB/dnaC", logt, logd, SubList)
+Showdata().figure("dnaA/dnaB/dnaC", logt, logd, SubList)
+Showdata().save("process.png")
+"""
 #Polymerization Process Test
 r = [0]
 i = 0
@@ -109,4 +93,5 @@ for location in range(process):
 #Save result
 Simulation().Wcplot(time,er)
 Simulation().Wcwrite(mod)
+"""
 Simulation().Makedata()
