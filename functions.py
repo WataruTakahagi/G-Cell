@@ -22,16 +22,20 @@ from numpy.random import *
 class Reactions:
     def __init__(self,time=0):
         self.time = time
+        self.sl = []
 
     def Readseq(self, readseq='sequence.txt'):
+        print "------------------------------------------------------------------"
+        print "| "+RED+"A whole-genome based simulation of prokaryotic DNA replication"+ENDC+" |"
+        print "| "+GREEN+"MODEL : "+YELLOW+"Escherichia coli K-12 substr. MG1655                  "+ENDC+" |"
+        print "------------------------------------------------------------------"
         seq = open(readseq)
         self.f = seq.read()
         self.m = []
         for i in range(len(self.f)):
             self.m.append([0,0,0,0,0,0,0,0,0,0,self.f[i],''])
         #ds,dnaA,dnaB,dnaC,dnaG,SSB,Topo1,SDC,DNApol1,DNApol3
-        print GREEN+"time"+ENDC+" = "+BLUE+`self.time`+ENDC
-        return self.f,self.m,self.time
+        return self.f,self.m,self.time,self.sl
 
     def Monomer(self,name,num):
         self.name = str(name)
@@ -47,6 +51,9 @@ class Reactions:
         self.num = num
         print "{:<27}".format(RED+self.Cname+ENDC)+" = "+BLUE+`self.num`+ENDC
         return [self.Cname,self.num]
+
+    def Region(self,region,state):
+        pass
 
     def Getindex(self, name, sublist):
         for i in range(len(sublist)):
@@ -88,156 +95,6 @@ class Decompose:
         state[Reactions().Getindex(self.Complex[1],state)][1] += 1
         state[Reactions().Getindex(self.dsubAB,state)][1] -= 1
         return state
-
-class dnaA:
-    def __init__(self):
-        pass
-
-    def propensity(self, state, k):
-        return
-
-    def execute(self, state):
-        return
-
-class dnaB:
-    def __init__(self):
-        pass
-
-    def propensity(self, state, k):
-        return
-
-    def walk(self, location, mseq, state):
-        return
-
-    def bind(self, location, mseq, state):
-        return
-
-    def unbind(self, location, mseq, state):
-        return
-
-    def execute(self, location, mseq, state):
-        mseq[location][0] = 1
-        state[Reactions().Getindex('dnaB',state)][1] -= 1
-        return location, mseq, state
-
-class dnaC:
-    def __init__(self):
-        pass
-
-    def propensity(self, state, k):
-        return
-
-    def execute(self, state):
-        return
-
-class dnaG:
-    def __init__(self):
-        pass
-
-    def propensity(self, state, k):
-        return
-
-    def execute(self, state):
-        return
-
-class RNaseH:
-    def __init__(self):
-        pass
-
-    def propensity(self, state, k):
-        return
-
-    def execute(self, state):
-        return
-
-class SSB:
-    def __init__(self):
-        pass
-
-    def propensity(self, state, k):
-        return
-
-    def execute(self, state):
-        return
-
-class Topo1:
-    def __init__(self):
-        pass
-
-    def propensity(self, state, k):
-        return
-
-    def execute(self, state):
-        return
-
-class SDC:
-    def __init__(self):
-        pass
-
-    def propensity(self, state, k):
-        return
-
-    def execute(self, state):
-        mseq[location][7] = 1
-        state[Reactions().Getindex('SDC',state)][1] -= 1
-        return location, mseq, state
-
-class DNApol1:
-    def __init__(self):
-        pass
-
-    def propensity(self, state, k):
-        return
-
-    def execute(self, state):
-        return
-
-class DNApol3:
-    def __init__(self):
-        pass
-
-    def propensity(self, mseq, state, k):
-        return
-
-    def execute(self, location, mseq, state, r):
-        if mseq[location][0] == 1:
-            mseq[location][9] = 1
-            state[9][1] -= 1
-            error = 0.001#ERROR RATE(%)
-            rate = rand()*100
-            if mseq[location][10]=='a':
-                if rate >= error:mseq[location][11]='t'
-                else:
-                    mseq[location][11]='miss'
-                    r[0] += 1
-            if mseq[location][10]=='t':
-                if rate >= error:mseq[location][11]='a'
-                else:
-                    mseq[location][11]='miss'
-                    r[0] += 1
-            if mseq[location][10]=='g':
-                if rate >= error:mseq[location][11]='c'
-                else:
-                    mseq[location][11]='miss'
-                    r[0] += 1
-            if mseq[location][10]=='c':
-                if rate >= error:mseq[location][11]='g'
-                else:
-                    mseq[location][11]='miss'
-                    r[0] += 1
-            mseq[location][0] = 0
-            location += 1
-        return location, mseq, state, r
-
-class DNApol3holoenzyme:
-    def __init__(self):
-        pass
-
-    def propensity(self, state, k):
-        return
-
-    def execute(self, state):
-        return
 
 class Showdata:
     def __init__(self):
