@@ -70,8 +70,12 @@ from genes import umuC
 from genes import umuD
 from genes import uvrD
 
-#Sequence data
-seq, mod, time, SubList = Reactions().Readseq('sequence.txt')
+#import proteins
+from proteins import DNA_polymerase_III_holoenzyme
+from proteins import primosome
+
+#reaction setup
+time, SubList = Reactions().setup()
 
 #Substance generate
 Reactions().Monomer('YciV',60000,SubList)#RNA/ssDNA exonuclease 5'->3'specific(http://ecocyc.org/ECOLI/NEW-IMAGE?type=ENZYME&object=G6634-MONOMER)
@@ -123,37 +127,44 @@ Reactions().Monomer('GspB',60000,SubList)#calcium-binding protein required for i
 Reactions().Monomer('UvrD',60000,SubList)#ssDNA translocase and dsDNA helicase - DNA helicase II(http://ecocyc.org/ECOLI/NEW-IMAGE?type=ENZYME&object=EG11064-MONOMER)
 Reactions().Monomer('PolA',60000,SubList)#DNA polymerase I, 5'-->3'polymerase, 5'-->3'and3'-->5'exonuclease(http://ecocyc.org/ECOLI/NEW-IMAGE?type=ENZYME&object=EG10746-MONOMER)
 Reactions().Monomer('NrdA',60000,SubList)#ribonucleoside diphosphate reductase 1, alpha atom fun subunit dimer(http://ecocyc.org/ECOLI/NEW-IMAGE?type=ENZYME&object=NRDA-MONOMER)
-Reactions().Complex('DNA polymerase III, core enzyme',0,SubList)
-Reactions().Complex('DNA polymerase III, preinitiation complex',0,SubList)
-Reactions().Complex('DNA polymerase III, beta subunit',0,SubList)
-Reactions().Complex('DNA polymerase III, tau subunit dimer',0,SubList)
-Reactions().Complex('DNA polymerase III, psi-chi subunit',0,SubList)
-Reactions().Enzyme('DNA polymerase III, holoenzyme',0,SubList)
+Reactions().Enzyme('DNA_polymerase_III_holoenzyme',0,SubList)
+Reactions().Complex('DNA_polymerase_III_core_enzyme',0,SubList)
+Reactions().Complex('DNA_polymerase_III_preinitiation_complex',0,SubList)
+Reactions().Complex('DNA_polymerase_III_beta_subunit',0,SubList)
+Reactions().Complex('DNA_polymerase_III_tau_subunit_dimer',0,SubList)
+Reactions().Complex('DNA_polymerase_III_psi-chi_subunit',0,SubList)
+Reactions().Enzyme('primosome',0,SubList)
+
+#Sequence data
+seq, mod = Reactions().Readseq('sequence.txt',SubList)
 
 #Gillespie Test
-logt, logd, t, tend = Showdata().logger(time, SubList, 0, 0.001)
-events = [Compose('DNA polymerase III, core enzyme',['DnaE','DnaQ','HolE'],[1,1,1],0.001),
-          #Compose('DNA polymerase III, preinitiation complex',['DnaX','HolB','HolA'],[3,1,1],0.1),
-          Compose('DNA polymerase III, beta subunit',['DnaN'],[2],0.001),
-          #Compose('DNA polymerase III, tau subunit dimer',['DnaX'],[2],0.1),
-          #Compose('DNA polymerase III, psi-chi subunit',['HolC','HolD'],[1,1],0.1),
-          Decompose('DNA polymerase III, core enzyme',['DnaE','DnaQ','HolE'],[1,1,1],1),
-          #Decompose('DNA polymerase III, preinitiation complex',['DnaX','HolB','HolA'],[3,1,1],5),
-          Decompose('DNA polymerase III, beta subunit',['DnaN'],[2],1)]
-          #Decompose('DNA polymerase III, tau subunit dimer',['DnaX'],[2],5),
-          #Decompose('DNA polymerase III, psi-chi subunit',['HolC','HolD'],[1,1],5)]
+logt, logd, t, tend = Showdata().logger(time, SubList, 0, 0.1)
+#events = [Compose('DNA_polymerase_III_core_enzyme',['DnaE','DnaQ','HolE'],[1,1,1],0.001),
+          #Compose('DNA_polymerase_III_preinitiation_complex',['DnaX','HolB','HolA'],[3,1,1],0.1),
+          #Compose('DNA_polymerase_III_beta_subunit',['DnaN'],[2],0.001),
+          #Compose('DNA_polymerase_III_tau_subunit_dimer',['DnaX'],[2],0.1),
+          #Compose('DNA_polymerase_III_psi-chi_subunit',['HolC','HolD'],[1,1],0.1),
+          #Decompose('DNA_polymerase_III_core_enzyme',['DnaE','DnaQ','HolE'],[1,1,1],1),
+          #Decompose('DNA_polymerase_III_preinitiation_complex',['DnaX','HolB','HolA'],[3,1,1],5),
+          #Decompose('DNA_polymerase_III_beta_subunit',['DnaN'],[2],1)]
+          #Decompose('DNA_polymerase_III_tau_subunit_dimer',['DnaX'],[2],5),
+          #Decompose('DNA_polymerase_III_psi-chi_subunit',['HolC','HolD'],[1,1],5)]
+events = [Compose('primosome',['DnaB'],[6],0.01),Compose('primosome',['DnaB'],[6],5)]
 Simulation().run(t, tend, SubList, events, logt, logd)
-Showdata().figure("DnaE", logt, logd, SubList)
-Showdata().figure("DnaQ", logt, logd, SubList)
-Showdata().figure("HolE", logt, logd, SubList)
+#Showdata().figure("DnaE", logt, logd, SubList)
+#Showdata().figure("DnaQ", logt, logd, SubList)
+#Showdata().figure("HolE", logt, logd, SubList)
 #Showdata().figure("DnaX", logt, logd, SubList)
 #Showdata().figure("HolB", logt, logd, SubList)
 #Showdata().figure("HolA", logt, logd, SubList)
-Showdata().figure("DnaN", logt, logd, SubList)
+#Showdata().figure("DnaN", logt, logd, SubList)
 #Showdata().figure("HolC", logt, logd, SubList)
 #Showdata().figure("HolD", logt, logd, SubList)
-Showdata().figure("DNA polymerase III, core enzyme", logt, logd, SubList)
-Showdata().figure("DNA polymerase III, beta subunit", logt, logd, SubList)
+Showdata().figure("DnaB", logt, logd, SubList)
+#Showdata().figure("DNA_polymerase_III_core_enzyme", logt, logd, SubList)
+#Showdata().figure("DNA_polymerase_III_beta_subunit", logt, logd, SubList)
+Showdata().figure("primosome", logt, logd, SubList)
 Showdata().save("complex.png")
 """
 #Polymerization Process Test
@@ -163,7 +174,7 @@ time = []
 er = []
 process = len(seq)
 for location in range(process):
-    dnaB().execute(location,mod,SubList)
+    primosome(0.5).execute(location,mod,SubList)
 for location in range(process):
     holB().execute(location,mod,SubList,r)
     time.append(i)
@@ -176,6 +187,6 @@ for location in range(process):
 
 #Save result
 Simulation().Wcplot(time,er)
-Simulation().Wcwrite(mod)
 """
+Simulation().Wcwrite(mod)
 Simulation().Makedata()

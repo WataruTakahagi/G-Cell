@@ -83,9 +83,7 @@ class dnaB:#replicative DNA helicase(http://ecocyc.org/ECOLI/NEW-IMAGE?type=GENE
         return
 
     def execute(self, location, mseq, state):
-        mseq[location][0] = 1
-        state[Reactions().Getindex('DnaB',state)][1] -= 1
-        return location, mseq, state
+        return
 
 class dnaC:#chromosome replication; initiation and chain elongation(http://ecocyc.org/ECOLI/NEW-IMAGE?type=GENE&object=EG10237)
     def __init__(self):

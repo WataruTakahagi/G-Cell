@@ -24,18 +24,25 @@ class Reactions:
         self.time = time
         self.sl = []
 
-    def Readseq(self, readseq='sequence.txt'):
+    def setup(self):
         print "------------------------------------------------------------------"
         print "| "+RED+"A whole-genome based simulation of prokaryotic DNA replication"+ENDC+" |"
         print "| "+GREEN+"MODEL : "+YELLOW+"Escherichia coli K-12 substr. MG1655                  "+ENDC+" |"
         print "------------------------------------------------------------------"
+        return self.time, self.sl
+
+    def Readseq(self, readseq, sublist):
         seq = open(readseq)
         self.f = seq.read()
         self.m = []
         for i in range(len(self.f)):
-            self.m.append([0,0,0,0,0,0,0,0,0,0,self.f[i],''])
-        #ds,dnaA,dnaB,dnaC,dnaG,SSB,Topo1,SDC,DNApol1,DNApol3
-        return self.f,self.m,self.time,self.sl
+            self.list = [0]
+            for j in range(len(sublist)):
+                self.list.append(0)
+            self.list.append(self.f[i])
+            self.list.append('')
+            self.m.append(self.list)
+        return self.f,self.m
 
     def Monomer(self,name,num,sublist):
         self.name = str(name)
@@ -68,6 +75,8 @@ class Reactions:
         for i in range(len(sublist)):
             if sublist[i][0] == name:
                 return i
+        if name == "ds":
+            return len(sublist)
 
 class Compose:
     def __init__(self,name,components,comnum,k):
@@ -150,7 +159,6 @@ class Simulation:
         newt = time + tau
         a0, l = 0, 0
         r = rand()*atotal
-        print newt
         for a in alist:
             a0 += a
             if a0 > r: j = l
