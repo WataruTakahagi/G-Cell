@@ -37,20 +37,29 @@ class Reactions:
         #ds,dnaA,dnaB,dnaC,dnaG,SSB,Topo1,SDC,DNApol1,DNApol3
         return self.f,self.m,self.time,self.sl
 
-    def Monomer(self,name,num):
+    def Monomer(self,name,num,sublist):
         self.name = str(name)
         self.num = num
-        print "{:<27}".format(YELLOW+self.name+ENDC)+" = "+BLUE+`self.num`+ENDC
+        print "{:<20}".format(YELLOW+self.name+ENDC)+" = "+BLUE+`self.num`+ENDC
         gn = [self.name,self.num]
-        return gn
+        sublist.append(gn)
+        return sublist
 
-    def Complex(self,name1,name2,num):
-        self.name1 = str(name1)
-        self.name2 = str(name2)
-        self.Cname = str(self.name1+"/"+self.name2)
+    def Complex(self,name,num,complexlist):
+        self.name = str(name)
         self.num = num
-        print "{:<27}".format(RED+self.Cname+ENDC)+" = "+BLUE+`self.num`+ENDC
-        return [self.Cname,self.num]
+        print "{:<55}".format(RED+self.name+ENDC)+" = "+BLUE+`self.num`+ENDC
+        gn = [self.name,self.num]
+        complexlist.append(gn)
+        return complexlist
+
+    def Enzyme(self,name,num,enzymelist):
+        self.name = str(name)
+        self.num = num
+        print "{:<55}".format(GREEN+self.name+ENDC)+" = "+BLUE+`self.num`+ENDC
+        gn = [self.name,self.num]
+        enzymelist.append(gn)
+        return enzymelist
 
     def Region(self,region,state):
         pass
@@ -61,39 +70,39 @@ class Reactions:
                 return i
 
 class Compose:
-    def __init__(self, csubA, csubB, k):
-        self.csubA = csubA
-        self.csubB = csubB
+    def __init__(self,name,components,comnum,k):
+        self.name = name
+        self.components = components
+        self.comnum = comnum
         self.k = k
 
     def propensity(self, state):
-        self.a = state[Reactions().Getindex(self.csubA,state)][1]
-        self.b = state[Reactions().Getindex(self.csubB,state)][1]
-        self.p = self.k * self.a * self.b
+        self.p = self.k
+        for i in range(len(self.components)):
+            self.p = self.p * state[Reactions().Getindex(self.components[i],state)][1]
         return self.p
 
     def execute(self, state):
-        self.Complex = str(self.csubA+'/'+self.csubB)
-        state[Reactions().Getindex(self.csubA,state)][1] -= 1
-        state[Reactions().Getindex(self.csubB,state)][1] -= 1
-        state[Reactions().Getindex(self.Complex,state)][1] += 1
+        for i in range(len(self.components)):
+            state[Reactions().Getindex(self.components[i],state)][1] -= self.comnum[i]
+        state[Reactions().Getindex(self.name,state)][1] += 1
         return state
 
 class Decompose:
-    def __init__(self, dsubAB, k):
-        self.dsubAB = dsubAB
-        self.Complex = dsubAB.split('/')
+    def __init__(self,name,components,comnum,k):
+        self.name = name
+        self.components = components
+        self.comnum = comnum
         self.k = k
 
     def propensity(self, state):
-        self.ab = state[Reactions().Getindex(self.dsubAB,state)][1]
-        self.p = self.k * self.ab
+        self.p = self.k * state[Reactions().Getindex(self.name,state)][1]
         return self.p
 
     def execute(self, state):
-        state[Reactions().Getindex(self.Complex[0],state)][1] += 1
-        state[Reactions().Getindex(self.Complex[1],state)][1] += 1
-        state[Reactions().Getindex(self.dsubAB,state)][1] -= 1
+        for i in range(len(self.components)):
+            state[Reactions().Getindex(self.components[i],state)][1] += self.comnum[i]
+        state[Reactions().Getindex(self.name,state)][1] -= 1
         return state
 
 class Showdata:
@@ -141,6 +150,7 @@ class Simulation:
         newt = time + tau
         a0, l = 0, 0
         r = rand()*atotal
+        print newt
         for a in alist:
             a0 += a
             if a0 > r: j = l
@@ -181,4 +191,4 @@ class Simulation:
         os.mkdir(dirname)
         if os.path.exists(pwd+'/error.png'): shutil.move('error.png',pwd+"/"+dirname)
         if os.path.exists(pwd+'/result.txt'):shutil.move('result.txt',pwd+"/"+dirname)
-        if os.path.exists(pwd+'/process.png'):shutil.move('process.png',pwd+"/"+dirname)
+        if os.path.exists(pwd+'/complex.png'):shutil.move('complex.png',pwd+"/"+dirname)

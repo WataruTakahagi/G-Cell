@@ -35,7 +35,7 @@ class argP:#ArgP DNA-binding transcriptional activator(http://ecocyc.org/ECOLI/N
     def execute(self, location, mseq, state):
         return
 
-class scpD:
+class cspD:#DNA replication inhibitor(http://ecocyc.org/ECOLI/NEW-IMAGE?type=GENE&object=EG11111)
     def __init__(self):
         pass
 
@@ -45,7 +45,7 @@ class scpD:
     def execute(self, location, mseq, state):
         return
 
-class diaA:
+class diaA:#DnaA initiator-associating factor for replication initiation(http://ecocyc.org/ECOLI/NEW-IMAGE?type=GENE&object=EG12780)
     def __init__(self):
         pass
 
@@ -55,7 +55,7 @@ class diaA:
     def execute(self, location, mseq, state):
         return
 
-class dinB:
+class dinB:#DNA polymerase IV (Y-family DNA polymerase; translesion DNA synthesis)(http://ecocyc.org/ECOLI/NEW-IMAGE?type=GENE&object=G6115)
     def __init__(self):
         pass
 
@@ -65,7 +65,7 @@ class dinB:
     def execute(self, location, mseq, state):
         return
 
-class dnaA:
+class dnaA:#chromosomal replication initiator protein DnaA; DNA-binding transcriptional dual regulator(http://ecocyc.org/ECOLI/NEW-IMAGE?type=GENE&object=EG10235)
     def __init__(self):
         pass
 
@@ -75,7 +75,7 @@ class dnaA:
     def execute(self, location, mseq, state):
         return
 
-class dnaB:
+class dnaB:#replicative DNA helicase(http://ecocyc.org/ECOLI/NEW-IMAGE?type=GENE&object=EG10236)
     def __init__(self):
         pass
 
@@ -87,7 +87,7 @@ class dnaB:
         state[Reactions().Getindex('DnaB',state)][1] -= 1
         return location, mseq, state
 
-class dnaC:
+class dnaC:#chromosome replication; initiation and chain elongation(http://ecocyc.org/ECOLI/NEW-IMAGE?type=GENE&object=EG10237)
     def __init__(self):
         pass
 
@@ -97,7 +97,7 @@ class dnaC:
     def execute(self, location, mseq, state):
         return
 
-class dnaE:
+class dnaE:#DNA polymerase III, alpha subunit(http://ecocyc.org/ECOLI/NEW-IMAGE?type=GENE&object=EG10238)
     def __init__(self):
         pass
 
@@ -107,7 +107,7 @@ class dnaE:
     def execute(self, location, mseq, state):
         return
 
-class dnaG:
+class dnaG:#DNA primase(http://ecocyc.org/ECOLI/NEW-IMAGE?type=GENE&object=EG10239)
     def __init__(self):
         pass
 
@@ -117,7 +117,7 @@ class dnaG:
     def execute(self, location, mseq, state):
         return
 
-class dnaN:
+class dnaN:#DNA polymerase III, beta subunit(http://ecocyc.org/ECOLI/NEW-IMAGE?type=GENE&object=EG10242)
     def __init__(self):
         pass
 
@@ -127,7 +127,7 @@ class dnaN:
     def execute(self, location, mseq, state):
         return
 
-class dnaQ:
+class dnaQ:#DNA polymerase III, epsilon subunit(http://ecocyc.org/ECOLI/NEW-IMAGE?type=GENE&object=EG10243)
     def __init__(self):
         pass
 
@@ -137,7 +137,7 @@ class dnaQ:
     def execute(self, location, mseq, state):
         return
 
-class dnaT:
+class dnaT:#primosomal protein DnaT(http://ecocyc.org/ECOLI/NEW-IMAGE?type=GENE&object=EG10244)
     def __init__(self):
         pass
 
@@ -147,7 +147,7 @@ class dnaT:
     def execute(self, location, mseq, state):
         return
 
-class dnaX:
+class dnaX:#DNA polymerase III, gamma subunit(http://ecocyc.org/ECOLI/NEW-IMAGE?type=GENE&object=EG10245)
     def __init__(self):
         pass
 
@@ -157,7 +157,7 @@ class dnaX:
     def execute(self, location, mseq, state):
         return
 
-class gspB:
+class gspB:#calcium-binding protein required for initiation of chromosome replication(http://ecocyc.org/ECOLI/NEW-IMAGE?type=GENE&object=EG11263)
     def __init__(self):
         pass
 
@@ -167,7 +167,7 @@ class gspB:
     def execute(self, location, mseq, state):
         return
 
-class gyrA:
+class gyrA:#DNA gyrase, subunit A(http://ecocyc.org/ECOLI/NEW-IMAGE?type=GENE&object=EG10423)
     def __init__(self):
         pass
 
@@ -177,7 +177,7 @@ class gyrA:
     def execute(self, location, mseq, state):
         return
 
-class gyrB:
+class gyrB:#DNA gyrase, subunit B(http://ecocyc.org/ECOLI/NEW-IMAGE?type=GENE&object=EG10424)
     def __init__(self):
         pass
 
@@ -187,7 +187,7 @@ class gyrB:
     def execute(self, location, mseq, state):
         return
 
-class hda:
+class hda:#regulator of DnaA that prevents premature reinitiation of DNA replication(http://ecocyc.org/ECOLI/NEW-IMAGE?type=GENE&object=G7313)
     def __init__(self):
         pass
 
@@ -197,7 +197,7 @@ class hda:
     def execute(self, location, mseq, state):
         return
 
-class holA:
+class holA:#DNA polymerase III, delta subunit(http://ecocyc.org/ECOLI/NEW-IMAGE?type=GENE&object=EG11412)
     def __init__(self):
         pass
 
@@ -207,7 +207,7 @@ class holA:
     def execute(self, location, mseq, state):
         return
 
-class holB:
+class holB:#DNA polymerase III, delta prime subunit(http://ecocyc.org/ECOLI/NEW-IMAGE?type=GENE&object=EG11500)
     def __init__(self):
         pass
 
@@ -244,7 +244,7 @@ class holB:
             location += 1
         return location, mseq, state, r
 
-class holC:
+class holC:#DNA polymerase III, chi subunit(http://ecocyc.org/ECOLI/NEW-IMAGE?type=GENE&object=EG11413)
     def __init__(self):
         pass
 
@@ -254,7 +254,7 @@ class holC:
     def execute(self, location, mseq, state):
         return
 
-class holD:
+class holD:#DNA polymerase III, psi subunit(http://ecocyc.org/ECOLI/NEW-IMAGE?type=GENE&object=EG11414)
     def __init__(self):
         pass
 
@@ -264,7 +264,7 @@ class holD:
     def execute(self, location, mseq, state):
         return
 
-class holE:
+class holE:#DNA polymerase III, theta subunit(http://ecocyc.org/ECOLI/NEW-IMAGE?type=GENE&object=EG11505)
     def __init__(self):
         pass
 
@@ -274,7 +274,7 @@ class holE:
     def execute(self, location, mseq, state):
         return
 
-class polA:
+class mioC:#http://ecocyc.org/ECOLI/NEW-IMAGE?type=GENE&object=EG11199(http://ecocyc.org/ECOLI/NEW-IMAGE?type=GENE&object=EG11199)
     def __init__(self):
         pass
 
@@ -284,7 +284,7 @@ class polA:
     def execute(self, location, mseq, state):
         return
 
-class polB:
+class parC:#dimer of topoisomerase IV subunit A(http://ecocyc.org/ECOLI/NEW-IMAGE?type=GENE&object=EG10686)
     def __init__(self):
         pass
 
@@ -294,7 +294,7 @@ class polB:
     def execute(self, location, mseq, state):
         return
 
-class priA:
+class parE:#topoisomerase IV subunit B(http://ecocyc.org/ECOLI/NEW-IMAGE?type=GENE&object=EG10687)
     def __init__(self):
         pass
 
@@ -304,7 +304,7 @@ class priA:
     def execute(self, location, mseq, state):
         return
 
-class priB:
+class polA:#DNA polymerase I, 5'-->3' polymerase, 5'-->3' and 3'-->5' exonuclease(http://ecocyc.org/ECOLI/NEW-IMAGE?type=GENE&object=EG10746)
     def __init__(self):
         pass
 
@@ -314,7 +314,7 @@ class priB:
     def execute(self, location, mseq, state):
         return
 
-class priC:
+class polB:#DNA polymerase II(http://ecocyc.org/ECOLI/NEW-IMAGE?type=GENE&object=EG10747)
     def __init__(self):
         pass
 
@@ -324,7 +324,7 @@ class priC:
     def execute(self, location, mseq, state):
         return
 
-class rarA:
+class priA:#primosome factor N'(http://ecocyc.org/ECOLI/NEW-IMAGE?type=GENE&object=EG10763)
     def __init__(self):
         pass
 
@@ -334,7 +334,7 @@ class rarA:
     def execute(self, location, mseq, state):
         return
 
-class rdgC:
+class priB:#primosomal replication protein N(http://ecocyc.org/ECOLI/NEW-IMAGE?type=GENE&object=EG10764)
     def __init__(self):
         pass
 
@@ -344,7 +344,7 @@ class rdgC:
     def execute(self, location, mseq, state):
         return
 
-class recF:
+class priC:#primosomal replication protein N''(http://ecocyc.org/ECOLI/NEW-IMAGE?type=GENE&object=EG10765)
     def __init__(self):
         pass
 
@@ -354,7 +354,7 @@ class recF:
     def execute(self, location, mseq, state):
         return
 
-class recG:
+class rarA:#recombination factor(http://ecocyc.org/ECOLI/NEW-IMAGE?type=GENE&object=EG12690)
     def __init__(self):
         pass
 
@@ -364,7 +364,7 @@ class recG:
     def execute(self, location, mseq, state):
         return
 
-class recQ:
+class rdgC:#nucleoid-associated protein RdgC(http://ecocyc.org/ECOLI/NEW-IMAGE?type=GENE&object=EG12158)
     def __init__(self):
         pass
 
@@ -374,7 +374,7 @@ class recQ:
     def execute(self, location, mseq, state):
         return
 
-class rep:
+class recF:#ssDNA and dsDNA binding, ATP binding(http://ecocyc.org/ECOLI/NEW-IMAGE?type=GENE&object=EG10828)
     def __init__(self):
         pass
 
@@ -384,7 +384,7 @@ class rep:
     def execute(self, location, mseq, state):
         return
 
-class rnhA:#rnhA (RNase HI, degrades RNA of DNA-RNA hybrids, participates in DNA replication)
+class recG:#RecG DNA helicase(http://ecocyc.org/ECOLI/NEW-IMAGE?type=GENE&object=EG10829)
     def __init__(self):
         pass
 
@@ -394,7 +394,7 @@ class rnhA:#rnhA (RNase HI, degrades RNA of DNA-RNA hybrids, participates in DNA
     def execute(self, location, mseq, state):
         return
 
-class rob:
+class recQ:#ATP-dependent DNA helicase(http://ecocyc.org/ECOLI/NEW-IMAGE?type=GENE&object=EG10833)
     def __init__(self):
         pass
 
@@ -404,7 +404,7 @@ class rob:
     def execute(self, location, mseq, state):
         return
 
-class sbmC:
+class rep:#Rep helicase, a single-stranded DNA dependent ATPase(http://ecocyc.org/ECOLI/NEW-IMAGE?type=GENE&object=EG10837)
     def __init__(self):
         pass
 
@@ -414,7 +414,7 @@ class sbmC:
     def execute(self, location, mseq, state):
         return
 
-class seqA:
+class rnhA:#RNase HI, degrades RNA of DNA-RNA hybrids, participates in DNA replication(http://ecocyc.org/ECOLI/NEW-IMAGE?type=GENE&object=EG10860)
     def __init__(self):
         pass
 
@@ -424,7 +424,7 @@ class seqA:
     def execute(self, location, mseq, state):
         return
 
-class topA:
+class rob:#Rob DNA-binding transcriptional activator(http://ecocyc.org/ECOLI/NEW-IMAGE?type=GENE&object=EG11366)
     def __init__(self):
         pass
 
@@ -434,7 +434,7 @@ class topA:
     def execute(self, location, mseq, state):
         return
 
-class topB:
+class sbmC:#DNA gyrase inhibitor(http://ecocyc.org/ECOLI/NEW-IMAGE?type=GENE&object=EG11892)
     def __init__(self):
         pass
 
@@ -444,7 +444,7 @@ class topB:
     def execute(self, location, mseq, state):
         return
 
-class tus:
+class seqA:#SeqA, negative modulator of initiation of replication(http://ecocyc.org/ECOLI/NEW-IMAGE?type=GENE&object=EG12197)
     def __init__(self):
         pass
 
@@ -454,7 +454,7 @@ class tus:
     def execute(self, location, mseq, state):
         return
 
-class umuC:
+class topA:#DNA topoisomerase I(http://ecocyc.org/ECOLI/NEW-IMAGE?type=GENE&object=EG11013)
     def __init__(self):
         pass
 
@@ -464,7 +464,7 @@ class umuC:
     def execute(self, location, mseq, state):
         return
 
-class umuD:
+class topB:#DNA topoisomerase III(http://ecocyc.org/ECOLI/NEW-IMAGE?type=GENE&object=EG11014)
     def __init__(self):
         pass
 
@@ -474,7 +474,37 @@ class umuD:
     def execute(self, location, mseq, state):
         return
 
-class uvrD:
+class tus:#DNA-binding protein; inhibition of replication at Ter sites(http://ecocyc.org/ECOLI/NEW-IMAGE?type=GENE&object=EG11038)
+    def __init__(self):
+        pass
+
+    def propensity(self, state, k):
+        return
+
+    def execute(self, location, mseq, state):
+        return
+
+class umuC:#SOS mutagenesis and repair(http://ecocyc.org/ECOLI/NEW-IMAGE?type=GENE&object=EG11056)
+    def __init__(self):
+        pass
+
+    def propensity(self, state, k):
+        return
+
+    def execute(self, location, mseq, state):
+        return
+
+class umuD:#SOS mutagenesis; error-prone repair; processed to UmuD'; forms complex with UmuC(http://ecocyc.org/ECOLI/NEW-IMAGE?type=GENE&object=EG11057)
+    def __init__(self):
+        pass
+
+    def propensity(self, state, k):
+        return
+
+    def execute(self, location, mseq, state):
+        return
+
+class uvrD:#ssDNA translocase and dsDNA helicase - DNA helicase II(http://ecocyc.org/ECOLI/NEW-IMAGE?type=GENE&object=EG11064)
     def __init__(self):
         pass
 
