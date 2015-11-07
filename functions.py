@@ -17,6 +17,7 @@ import shutil
 import numpy as np
 import matplotlib.pyplot as plt
 from numpy.random import *
+import glob
 
 #General reactions
 class Reactions:
@@ -197,6 +198,6 @@ class Simulation:
                     dirname = raw_input(RED+"ERROR "+GREEN+"Please input other name : "+ENDC)
                 else: break
         os.mkdir(dirname)
-        if os.path.exists(pwd+'/error.png'): shutil.move('error.png',pwd+"/"+dirname)
         if os.path.exists(pwd+'/result.txt'):shutil.move('result.txt',pwd+"/"+dirname)
-        if os.path.exists(pwd+'/complex.png'):shutil.move('complex.png',pwd+"/"+dirname)
+        for name in glob.glob('*.png'):
+            shutil.move(name,pwd+"/"+dirname)

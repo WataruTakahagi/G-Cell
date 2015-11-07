@@ -17,6 +17,7 @@ import shutil
 import numpy as np
 import matplotlib.pyplot as plt
 from numpy.random import *
+import glob
 
 #import whole-ecoli replication module
 from functions import Reactions
@@ -136,7 +137,7 @@ Reactions().Complex('DNA_polymerase_III_psi-chi_subunit',0,SubList)
 Reactions().Enzyme('primosome',0,SubList)
 
 #Sequence data
-seq, mod = Reactions().Readseq('sequence.txt',SubList)
+seq, mod = Reactions().Readseq('seqtest.txt',SubList)
 
 #Gillespie Test
 logt, logd, t, tend = Showdata().logger(time, SubList, 0, 0.1)
