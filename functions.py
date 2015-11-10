@@ -61,14 +61,6 @@ class Reactions:
         complexlist.append(gn)
         return complexlist
 
-    def Enzyme(self,name,num,enzymelist):
-        self.name = str(name)
-        self.num = num
-        print "{:<55}".format(GREEN+self.name+ENDC)+" = "+BLUE+`self.num`+ENDC
-        gn = [self.name,self.num]
-        enzymelist.append(gn)
-        return enzymelist
-
     def Region(self,region,state):
         pass
 

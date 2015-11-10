@@ -26,54 +26,8 @@ from functions import Simulation
 from functions import Compose
 from functions import Decompose
 
-#import genes
-from genes import argP
-from genes import cspD
-from genes import diaA
-from genes import dinB
-from genes import dnaA
-from genes import dnaB
-from genes import dnaC
-from genes import dnaE
-from genes import dnaG
-from genes import dnaN
-from genes import dnaQ
-from genes import dnaT
-from genes import dnaX
-from genes import gspB
-from genes import gyrA
-from genes import gyrB
-from genes import hda
-from genes import holA
-from genes import holB
-from genes import holC
-from genes import holD
-from genes import holE
-from genes import polA
-from genes import polB
-from genes import priA
-from genes import priB
-from genes import priC
-from genes import rarA
-from genes import rdgC
-from genes import recF
-from genes import recG
-from genes import recQ
-from genes import rep
-from genes import rnhA
-from genes import rob
-from genes import sbmC
-from genes import seqA
-from genes import topA
-from genes import topB
-from genes import tus
-from genes import umuC
-from genes import umuD
-from genes import uvrD
-
-#import proteins
-from proteins import DNA_polymerase_III_holoenzyme
-from proteins import primosome
+#import enzymes
+#from enzymes import primosome
 
 #reaction setup
 time, SubList = Reactions().setup()
@@ -128,45 +82,45 @@ Reactions().Monomer('GspB',60000,SubList)#calcium-binding protein required for i
 Reactions().Monomer('UvrD',60000,SubList)#ssDNA translocase and dsDNA helicase - DNA helicase II(http://ecocyc.org/ECOLI/NEW-IMAGE?type=ENZYME&object=EG11064-MONOMER)
 Reactions().Monomer('PolA',60000,SubList)#DNA polymerase I, 5'-->3'polymerase, 5'-->3'and3'-->5'exonuclease(http://ecocyc.org/ECOLI/NEW-IMAGE?type=ENZYME&object=EG10746-MONOMER)
 Reactions().Monomer('NrdA',60000,SubList)#ribonucleoside diphosphate reductase 1, alpha atom fun subunit dimer(http://ecocyc.org/ECOLI/NEW-IMAGE?type=ENZYME&object=NRDA-MONOMER)
-Reactions().Enzyme('DNA_polymerase_III_holoenzyme',0,SubList)
-Reactions().Complex('DNA_polymerase_III_core_enzyme',0,SubList)
-Reactions().Complex('DNA_polymerase_III_preinitiation_complex',0,SubList)
-Reactions().Complex('DNA_polymerase_III_beta_subunit',0,SubList)
-Reactions().Complex('DNA_polymerase_III_tau_subunit_dimer',0,SubList)
-Reactions().Complex('DNA_polymerase_III_psi-chi_subunit',0,SubList)
-Reactions().Enzyme('primosome',0,SubList)
+Reactions().Monomer('PriC',60000,SubList)#primosomal replication protein N''(http://ecocyc.org/ECOLI/NEW-IMAGE?type=ENZYME&object=EG10765-MONOMER)
+Reactions().Complex('primosome',0,SubList)
+#Reactions().Complex('DNA_polymerase_III_coreenzyme',0,SubList)
 
 #Sequence data
-seq, mod = Reactions().Readseq('seqtest.txt',SubList)
+seq, mod = Reactions().Readseq('sequence.txt',SubList)
 
 #Gillespie Test
 logt, logd, t, tend = Showdata().logger(time, SubList, 0, 0.1)
-#events = [Compose('DNA_polymerase_III_core_enzyme',['DnaE','DnaQ','HolE'],[1,1,1],0.001),
-          #Compose('DNA_polymerase_III_preinitiation_complex',['DnaX','HolB','HolA'],[3,1,1],0.1),
-          #Compose('DNA_polymerase_III_beta_subunit',['DnaN'],[2],0.001),
-          #Compose('DNA_polymerase_III_tau_subunit_dimer',['DnaX'],[2],0.1),
-          #Compose('DNA_polymerase_III_psi-chi_subunit',['HolC','HolD'],[1,1],0.1),
-          #Decompose('DNA_polymerase_III_core_enzyme',['DnaE','DnaQ','HolE'],[1,1,1],1),
-          #Decompose('DNA_polymerase_III_preinitiation_complex',['DnaX','HolB','HolA'],[3,1,1],5),
-          #Decompose('DNA_polymerase_III_beta_subunit',['DnaN'],[2],1)]
-          #Decompose('DNA_polymerase_III_tau_subunit_dimer',['DnaX'],[2],5),
-          #Decompose('DNA_polymerase_III_psi-chi_subunit',['HolC','HolD'],[1,1],5)]
-events = [Compose('primosome',['DnaB'],[6],0.01),Compose('primosome',['DnaB'],[6],5)]
+
+#events = [Compose('DNA_polymerase_III_holoenzyme',['DnaE','DnaQ','HolE','DnaX','HolB','HolA','DnaN','DnaX','HolC','HolD'],[3,3,3,3,1,1,4,2,4,4],1e-40),
+#          Decompose('DNA_polymeraseIII_holoenzyme',['DnaE','DnaQ','HolE','DnaX','HolB','HolA','DnaN','DnaX','HolC','HolD'],[3,3,3,3,1,1,4,2,4,4],5)]
+
+events = [Compose('primosome',['DnaB','DnaT','PriB','PriA','PriC','DnaG'],[6,3,2,1,1,1],1e-22),
+          Decompose('primosome',['DnaB','DnaT','PriB','PriA','PriC','DnaG'],[6,3,2,1,1,1],5)]
+
 Simulation().run(t, tend, SubList, events, logt, logd)
-#Showdata().figure("DnaE", logt, logd, SubList)
-#Showdata().figure("DnaQ", logt, logd, SubList)
-#Showdata().figure("HolE", logt, logd, SubList)
-#Showdata().figure("DnaX", logt, logd, SubList)
-#Showdata().figure("HolB", logt, logd, SubList)
-#Showdata().figure("HolA", logt, logd, SubList)
-#Showdata().figure("DnaN", logt, logd, SubList)
-#Showdata().figure("HolC", logt, logd, SubList)
-#Showdata().figure("HolD", logt, logd, SubList)
+"""
+Showdata().figure("DnaE", logt, logd, SubList)
+Showdata().figure("DnaQ", logt, logd, SubList)
+Showdata().figure("HolE", logt, logd, SubList)
+Showdata().figure("DnaX", logt, logd, SubList)
+Showdata().figure("HolB", logt, logd, SubList)
+Showdata().figure("HolA", logt, logd, SubList)
+Showdata().figure("DnaN", logt, logd, SubList)
+Showdata().figure("HolC", logt, logd, SubList)
+Showdata().figure("HolD", logt, logd, SubList)
+Showdata().figure("DNApolymeraseIIIholoenzyme", logt, logd, SubList)
+Showdata().save("DNApolymeraseIIIholoenzyme.png")
+"""
 Showdata().figure("DnaB", logt, logd, SubList)
-#Showdata().figure("DNA_polymerase_III_core_enzyme", logt, logd, SubList)
-#Showdata().figure("DNA_polymerase_III_beta_subunit", logt, logd, SubList)
+Showdata().figure("DnaT", logt, logd, SubList)
+Showdata().figure("PriB", logt, logd, SubList)
+Showdata().figure("PriA", logt, logd, SubList)
+Showdata().figure("PriC", logt, logd, SubList)
+Showdata().figure("DnaG", logt, logd, SubList)
 Showdata().figure("primosome", logt, logd, SubList)
-Showdata().save("complex.png")
+Showdata().save("primosome.png")
+
 """
 #Polymerization Process Test
 r = [0]
@@ -189,5 +143,5 @@ for location in range(process):
 #Save result
 Simulation().Wcplot(time,er)
 """
-Simulation().Wcwrite(mod)
+#Simulation().Wcwrite(mod)
 Simulation().Makedata()
