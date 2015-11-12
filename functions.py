@@ -81,7 +81,7 @@ class Compose:
     def propensity(self, state):
         self.p = self.k
         for i in range(len(self.components)):
-            self.p = self.p * state[Reactions().Getindex(self.components[i],state)][1]
+            self.p = self.p * state[Reactions().Getindex(self.components[i],state)][1] ** self.comnum[i]
         return self.p
 
     def execute(self, state):
