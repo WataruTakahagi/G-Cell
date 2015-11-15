@@ -24,13 +24,14 @@ class Reactions:
     def __init__(self,time=0):
         self.time = time
         self.sl = []
+        self.evl = []
 
     def setup(self):
         print "------------------------------------------------------------------"
         print "| "+RED+"A whole-genome based simulation of prokaryotic DNA replication"+ENDC+" |"
         print "| "+GREEN+"MODEL : "+YELLOW+"Escherichia coli K-12 substr. MG1655                  "+ENDC+" |"
         print "------------------------------------------------------------------"
-        return self.time, self.sl
+        return self.time, self.sl, self.evl
 
     def Readseq(self, readseq, sublist):
         seq = open(readseq)
@@ -41,6 +42,11 @@ class Reactions:
             for j in range(len(sublist)):
                 self.list.append(0)
             self.list.append(self.f[i])
+            self.list.append('')
+            if self.f[i] == 'a':self.list.append('t')
+            if self.f[i] == 't':self.list.append('a')
+            if self.f[i] == 'g':self.list.append('c')
+            if self.f[i] == 'c':self.list.append('g')
             self.list.append('')
             self.m.append(self.list)
         return self.f,self.m
@@ -70,6 +76,10 @@ class Reactions:
                 return i
         if name == "ds":
             return len(sublist)
+
+    def Events(self, ev, evlist):
+        evlist.append(ev)
+        return evlist
 
 class Compose:
     def __init__(self,name,components,comnum,k):
@@ -107,6 +117,26 @@ class Decompose:
         state[Reactions().Getindex(self.name,state)][1] -= 1
         return state
 
+class Bind:
+    def __init__(self,sub,sublist,location,k):
+        pass
+
+    def propensity(self, state, location, k):
+        return
+
+    def execute(self, state, location, k):
+        return
+
+class Unbind:
+    def __init__(self,sub,sublist,location,k):
+        pass
+
+    def propensity(self, state, location, k):
+        return
+
+    def execute(self, state, location, k):
+        return
+
 class Showdata:
     def __init__(self):
         pass
@@ -138,11 +168,18 @@ class Showdata:
         plt.savefig(name)
         plt.close()
 
+    def png(self,figlist,logt,logd,sublist,pngname):
+        for name in figlist:
+            Showdata().figure(name, logt, logd, sublist)
+        if pngname == 'default':self.pngname = figlist[-1]+'.png'
+        else: self.pngname = pngname+'.png'
+        Showdata().save(self.pngname)
+
 class Simulation:
     def __init__(self):
         pass
 
-    def Step(self, time, state, events):
+    def step(self, time, state, events):
         atotal = 0
         alist = []
         for i in range(len(events)):
@@ -159,9 +196,9 @@ class Simulation:
         news = events[j].execute(state)
         return newt, news
 
-    def run(self, t, tend, SubList, events, logt, logd):
+    def run(self, t, tend, SubList, events, logt, logd, mod):
         while t <= tend:
-            t, SubList = Simulation().Step(t, SubList, events)
+            t, SubList = Simulation().step(t, SubList, events)
             logt, logd = Showdata().getdata(t, SubList, logt, logd)
         return t, SubList, logt, logd
 

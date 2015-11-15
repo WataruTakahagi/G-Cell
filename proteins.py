@@ -136,7 +136,9 @@ class Dam:#DNA adenine methyltransferase
         return
 
 class primosome:
-    def __init__(self,k):
+    def __init__(self,location,mseq,k):
+        self.location = location
+        self.mseq = mseq
         self.k = k
 
     def propensity(self, state):
@@ -144,8 +146,24 @@ class primosome:
         self.p = self.p * state[Reactions().Getindex('primosome',state)][1]
         return self.p
 
+    def execute(self, state):
+        if self.location >= 1 : mseq[self.location-1][Reactions().Getindex('primosome',state)] = 0
+        self.mseq[self.location][Reactions().Getindex('primosome',state)] = 1
+        self.mseq[self.location][Reactions().Getindex('ds',state)] = 1
+        return self.location, self.mseq, state
+
+class DnaA:
+    def __init__(self, mod, k):
+        self.mod = mod
+        self.k = k
+        self.OriC9 = [0,0,0,0,0]
+        self.OriC13 = [0,0,0]
+
+    def propensity(self, state, k):
+        for i in OriC9:
+            self.k = self.k * i
+        for i in OriC13:
+            self.k = self.k * i
+
     def execute(self, location, mseq, state):
-        if location >= 1 : mseq[location-1][Reactions().Getindex('primosome',state)] = 0
-        mseq[location][Reactions().Getindex('primosome',state)] = 1
-        mseq[location][Reactions().Getindex('ds',state)] = 1
-        return location, mseq, state
+        return

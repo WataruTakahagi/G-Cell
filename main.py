@@ -20,17 +20,11 @@ from numpy.random import *
 import glob
 
 #import whole-ecoli replication module
-from functions import Reactions
-from functions import Showdata
-from functions import Simulation
-from functions import Compose
-from functions import Decompose
+from functions import *
+from proteins import *
 
-#import enzymes
-#from enzymes import primosome
-
-#reaction setup
-time, SubList = Reactions().setup()
+#setup
+time, SubList, events = Reactions().setup()
 
 #Substance generate
 Reactions().Monomer('YciV',600,SubList)#RNA/ssDNA exonuclease 5'->3'specific(http://ecocyc.org/ECOLI/NEW-IMAGE?type=ENZYME&object=G6634-MONOMER)
@@ -95,38 +89,23 @@ Reactions().Complex('DNA_primase',0,SubList)
 seq, mod = Reactions().Readseq('seqtest.txt',SubList)
 
 #Gillespie Test
-logt, logd, t, tend = Showdata().logger(time, SubList, 0, 0.05)
+logt, logd, t, tend = Showdata().logger(time, SubList, 0, 0.01)
+Reactions().Events(Compose('replicative_DNA_helicase',['DnaB'],[6],1.0e-9),events)
+Reactions().Events(Compose('primosomal_protein_DnaT',['DnaT'],[3],1.0e-2),events)
+Reactions().Events(Compose('primosomal_replication_protein_N',['PriB'],[2],5.0e-1),events)
+Reactions().Events(Compose('primosome',['replicative_DNA_helicase','primosomal_protein_DnaT','primosomal_replication_protein_N','PriA','PriC','DnaG'],[1,1,1,1,1,1],1.0e-8),events)
+Reactions().Events(Decompose('replicative_DNA_helicase',['DnaB'],[6],10),events)
+Reactions().Events(Decompose('primosomal_protein_DnaT',['DnaT'],[3],1),events)
+Reactions().Events(Decompose('primosomal_replication_protein_N',['PriB'],[2],1),events)
+Reactions().Events(Decompose('primosome',['replicative_DNA_helicase','primosomal_protein_DnaT','primosomal_replication_protein_N','PriA','PriC','DnaG'],[1,1,1,1,1,1],10),events)
+Reactions().Events(primosome(0,mod,0.5),events)
+Simulation().run(t, tend, SubList, events, logt, logd, mod)
 
-#events = [Compose('primosome',['DnaB','DnaT','PriB','PriA','PriC','DnaG'],[6,3,2,1,1,1],1e-12),
-#          Decompose('primosome',['DnaB','DnaT','PriB','PriA','PriC','DnaG'],[6,3,2,1,1,1],5)]
-events = [Compose('replicative_DNA_helicase',['DnaB'],[6],1.0e-9),
-          Compose('primosomal_protein_DnaT',['DnaT'],[3],1.0e-2),
-          Compose('primosomal_replication_protein_N',['PriB'],[2],5.0e-1),
-          Compose('primosome',['replicative_DNA_helicase','primosomal_protein_DnaT','primosomal_replication_protein_N','PriA','PriC','DnaG'],[1,1,1,1,1,1],1.0e-5),
-          Decompose('replicative_DNA_helicase',['DnaB'],[6],10),
-          Decompose('primosomal_protein_DnaT',['DnaT'],[3],1),
-          Decompose('primosomal_replication_protein_N',['PriB'],[2],1),
-          Decompose('primosome',['replicative_DNA_helicase','primosomal_protein_DnaT','primosomal_replication_protein_N','PriA','PriC','DnaG'],[1,1,1,1,1,1],10)]
-
-Simulation().run(t, tend, SubList, events, logt, logd)
-
-Showdata().figure("DnaB", logt, logd, SubList)
-Showdata().figure("replicative_DNA_helicase", logt, logd, SubList)
-Showdata().save("replicative_DNA_helicase.png")
-Showdata().figure("DnaT", logt, logd, SubList)
-Showdata().figure("primosomal_protein_DnaT", logt, logd, SubList)
-Showdata().save("primosomal_protein_DnaT")
-Showdata().figure("PriB", logt, logd, SubList)
-Showdata().figure("primosomal_replication_protein_N", logt, logd, SubList)
-Showdata().save("primosomal_replication_protein_N")
-Showdata().figure("replicative_DNA_helicase", logt, logd, SubList)
-Showdata().figure("primosomal_protein_DnaT", logt, logd, SubList)
-Showdata().figure("primosomal_replication_protein_N", logt, logd, SubList)
-Showdata().figure("PriA", logt, logd, SubList)
-Showdata().figure("PriC", logt, logd, SubList)
-Showdata().figure("DnaG", logt, logd, SubList)
-Showdata().figure("primosome", logt, logd, SubList)
-Showdata().save("primosome.png")
+#Display
+Showdata().png(['DnaB','replicative_DNA_helicase'], logt, logd, SubList,'default')
+Showdata().png(['DnaT','primosomal_protein_DnaT'], logt, logd, SubList,'default')
+Showdata().png(['PriB','primosomal_replication_protein_N'], logt, logd, SubList,'default')
+Showdata().png(['replicative_DNA_helicase','primosomal_protein_DnaT','primosomal_replication_protein_N','PriA','PriC','DnaG','primosome'], logt, logd, SubList,'default')
 
 """
 #Polymerization Process Test
@@ -150,5 +129,5 @@ for location in range(process):
 #Save result
 Simulation().Wcplot(time,er)
 """
-#Simulation().Wcwrite(mod)
+Simulation().Wcwrite(mod)
 Simulation().Makedata()
