@@ -167,3 +167,13 @@ class DnaA:
 
     def execute(self, location, mseq, state):
         return
+
+class DNA_polymerase_III_holoenzyme:
+    def __init__(self,location,mseq,k):
+        pass
+
+    def propensity(self, state):
+        return
+
+    def execute(self, state):
+        return
