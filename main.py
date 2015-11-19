@@ -93,6 +93,9 @@ Reactions().Complex('DNA_polymerase_III_psi_chi_subunit',0,SubList)
 
 #Sequence data
 seq, mod = Reactions().Readseq('seqtest.txt',SubList)
+Reactions().Increase(0,'DnaB',mod,SubList)
+Reactions().Increase(0,'DnaB',mod,SubList)
+Reactions().Decrease(0,'DnaA',mod,SubList)
 
 #run process
 logt, logd, t, tend = Showdata().logger(time, SubList, 0, 0.01)
@@ -106,7 +109,7 @@ Reactions().Events(Decompose('replicative_DNA_helicase',['DnaB'],[6],10),events)
 Reactions().Events(Decompose('primosomal_protein_DnaT',['DnaT'],[3],1),events)
 Reactions().Events(Decompose('primosomal_replication_protein_N',['PriB'],[2],1),events)
 Reactions().Events(Decompose('primosome',['replicative_DNA_helicase','primosomal_protein_DnaT','primosomal_replication_protein_N','PriA','PriC','DnaG'],[1,1,1,1,1,1],10),events)
-Reactions().Events(primosome(0,mod,0.00),events)
+#Reactions().Events(primosome(0,mod,0.00),events)#delete location info.
 
 #DNA_polymerase_III_holoenzyme
 Reactions().Events(Compose('DNA_polymerase_III_core_enzyme',['DnaE','DnaQ','HolE'],[1,1,1],1.0e-2),events)
@@ -115,11 +118,10 @@ Reactions().Events(Compose('DNA_polymerase_III_beta_subunit',['DnaN'],[2],5.0e-1
 Reactions().Events(Compose('DNA_polymerase_III_tau_subunit_dimer',['DnaX'],[2],5.0e-1),events)
 Reactions().Events(Compose('DNA_polymerase_III_psi_chi_subunit',['HolC','HolD'],[1,1],5.0e-1),events)
 Reactions().Events(Compose('DNA_polymerase_III_holoenzyme',['DNA_polymerase_III_core_enzyme','DNA_polymerase_III_preinitiation_complex','DNA_polymerase_III_beta_subunit','DNA_polymerase_III_tau_subunit_dimer','DNA_polymerase_III_psi_chi_subunit'],[3,1,2,1,4],1.0e-15),events)
-Reactions().Events(DNA_polymerase_III_holoenzyme(0,mod,0.00),events)
+#Reactions().Events(DNA_polymerase_III_holoenzyme(0,mod,0.00),events)
 
 #simulation
 Simulation().run(t, tend, SubList, events, logt, logd, mod)
-
 
 #showdata, make .png
 Showdata().png(['DnaB','replicative_DNA_helicase'], logt, logd, SubList,'default')
@@ -135,5 +137,5 @@ Showdata().png(['HolC','HolD','DNA_polymerase_III_psi_chi_subunit'], logt, logd,
 Showdata().png(['DNA_polymerase_III_core_enzyme','DNA_polymerase_III_preinitiation_complex','DNA_polymerase_III_beta_subunit','DNA_polymerase_III_tau_subunit_dimer','DNA_polymerase_III_psi_chi_subunit','DNA_polymerase_III_holoenzyme'], logt, logd, SubList,'default')
 
 #Finalize
-Simulation().Wcwrite(mod)
+Simulation().Save(mod)
 Simulation().Makedata('default')

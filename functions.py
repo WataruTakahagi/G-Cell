@@ -36,19 +36,23 @@ class Reactions:
     def Readseq(self, readseq, sublist):
         seq = open(readseq)
         self.f = seq.read()
-        self.m = []
+        self.m = np.zeros((len(self.f),len(sublist)+5))
         for i in range(len(self.f)):
-            self.list = [0]
-            for j in range(len(sublist)):
-                self.list.append(0)
-            self.list.append(self.f[i])
-            self.list.append('')
-            if self.f[i] == 'a':self.list.append('t')
-            if self.f[i] == 't':self.list.append('a')
-            if self.f[i] == 'g':self.list.append('c')
-            if self.f[i] == 'c':self.list.append('g')
-            self.list.append('')
-            self.m.append(self.list)
+            if self.f[i] == 'a':
+                self.m[i][len(sublist)+2] = 0.23
+                self.m[i][len(sublist)+4] = 0.73
+            if self.f[i] == 't':
+                self.m[i][len(sublist)+2] = 0.24
+                self.m[i][len(sublist)+4] = 0.74
+            if self.f[i] == 'g':
+                self.m[i][len(sublist)+2] = 0.25
+                self.m[i][len(sublist)+4] = 0.75
+            if self.f[i] == 'c':
+                self.m[i][len(sublist)+2] = 0.26
+                self.m[i][len(sublist)+4] = 0.76
+            if self.f[i] == 'M':
+                self.m[i][len(sublist)+2] = 0.88
+                self.m[i][len(sublist)+4] = 0.88
         return self.f,self.m
 
     def Monomer(self,name,num,sublist):
@@ -76,6 +80,14 @@ class Reactions:
                 return i
         if name == "ds":
             return len(sublist)
+
+    def Increase(self, location, name, mod, sublist):
+        mod[location][Reactions().Getindex(name,sublist)] += 1
+        return mod
+
+    def Decrease(self, location, name, mod, sublist):
+        mod[location][Reactions().Getindex(name,sublist)] -= 1
+        return mod
 
     def Events(self, ev, evlist):
         evlist.append(ev)
@@ -210,13 +222,17 @@ class Simulation:
         plt.savefig("error.png")
         plt.close()
 
-    def Wcwrite(self, mod):
-        result = open('result.txt', 'w')
-        for line in mod:
-            result.write(str(line)+'\n')
-        result.close()
+    def Save(self, mod):
+        np.save('result.npy', mod)
+        f = open('loadresult.py','w')
+        f.write("#!/usr/bin/env python\n")
+        f.write("import numpy as np\n")
+        f.write("f = np.load('result.npy')\n")
+        f.write("print f\n")
+        f.close()
 
-    def Makedata(self, dirname="result"):
+    def Makedata(self, dirname):
+        if dirname == 'default':dirname = 'result'
         pwd = os.getcwd()
         if os.path.exists(pwd+"/"+dirname):
             swt = 1
@@ -227,6 +243,7 @@ class Simulation:
                     dirname = raw_input(RED+"ERROR "+GREEN+"Please input other name : "+ENDC)
                 else: break
         os.mkdir(dirname)
-        if os.path.exists(pwd+'/result.txt'):shutil.move('result.txt',pwd+"/"+dirname)
+        if os.path.exists(pwd+'/result.npy'):shutil.move('result.npy',pwd+"/"+dirname)
+        if os.path.exists(pwd+'/loadresult.py'):shutil.move('loadresult.py',pwd+"/"+dirname)
         for name in glob.glob('*.png'):
             shutil.move(name,pwd+"/"+dirname)
