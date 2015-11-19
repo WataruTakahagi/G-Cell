@@ -39,28 +39,43 @@ class Reactions:
         self.m = np.zeros((len(self.f),len(sublist)+5))
         for i in range(len(self.f)):
             if self.f[i] == 'a':
-                self.m[i][len(sublist)+2] = 0.23#a(r)
-                self.m[i][len(sublist)+4] = 0.74#t(l)
+                self.m[i][len(sublist)+1] = 0.23#a(r)
+                self.m[i][len(sublist)+3] = 0.76#t(l)
             if self.f[i] == 't':
-                self.m[i][len(sublist)+2] = 0.24#t(r)
-                self.m[i][len(sublist)+4] = 0.73#a(l)
+                self.m[i][len(sublist)+1] = 0.26#t(r)
+                self.m[i][len(sublist)+3] = 0.73#a(l)
             if self.f[i] == 'g':
-                self.m[i][len(sublist)+2] = 0.25#g(r)
-                self.m[i][len(sublist)+4] = 0.76#c(l)
+                self.m[i][len(sublist)+1] = 0.24#g(r)
+                self.m[i][len(sublist)+3] = 0.75#c(l)
             if self.f[i] == 'c':
-                self.m[i][len(sublist)+2] = 0.26#c(r)
-                self.m[i][len(sublist)+4] = 0.75#g(l)
+                self.m[i][len(sublist)+1] = 0.25#c(r)
+                self.m[i][len(sublist)+3] = 0.74#g(l)
             if self.f[i] == 'M':
-                self.m[i][len(sublist)+2] = 0.28#mutation(r)
-                self.m[i][len(sublist)+4] = 0.78#mutation(l)
-            #round(self.m[0][len(sublist)+2],0) # = 0 reading
-            #round(self.m[0][len(sublist)+4],0) # = 1 lagging
-            #*.*3 = a
-            #*.*4 = t
-            #*.*5 = g
-            #*.*6 = c
-            #*.*8 = M
+                self.m[i][len(sublist)+1] = 0.28#mutation(r)
+                self.m[i][len(sublist)+3] = 0.78#mutation(l)
         return self.f,self.m
+
+    def Baseinfo(self, ID, mod):
+            self.m = mod
+            if round(ID,0) == 0.0: self.rl = 'r'
+            if round(ID,0) == 1.0: self.rl = 'l'
+            number,base = [3,4,5,6,8],['a','g','c','t','M']
+            for i in range(len(number)):
+                if round((ID-0.2)*100,0) == number[i] or round((ID-0.7)*100,0) == number[i]: self.base = base[i]
+            return self.rl,self.base
+            """
+            print Reactions().Baseinfo(mod[i][Reactions().Getindex('r',SubList)],mod)[1]
+            print Reactions().Baseinfo(0.23,mod)
+            print Reactions().Baseinfo(0.24,mod)
+            print Reactions().Baseinfo(0.25,mod)
+            print Reactions().Baseinfo(0.26,mod)
+            print Reactions().Baseinfo(0.73,mod)
+            print Reactions().Baseinfo(0.74,mod)
+            print Reactions().Baseinfo(0.75,mod)
+            print Reactions().Baseinfo(0.76,mod)
+            print Reactions().Baseinfo(0.28,mod)
+            print Reactions().Baseinfo(0.78,mod)
+            """
 
     def Monomer(self,name,num,sublist):
         self.name = str(name)
@@ -87,6 +102,10 @@ class Reactions:
                 return i
         if name == "ds":
             return len(sublist)
+        if name == "r":
+            return len(sublist)+1
+        if name == "l":
+            return len(sublist)+3
 
     def Increase(self, location, name, mod, sublist):
         mod[location][Reactions().Getindex(name,sublist)] += 1
@@ -137,14 +156,14 @@ class Decompose:
         return state
 
 class Bind:
-    def __init__(self,sub,sublist,location,k):
-        pass
+    def __init__(self,sub,sublist,k):
+        self.location = 0
 
     def propensity(self, state, location, k):
         return
 
     def execute(self, state, location, k):
-        return
+        Reactions().Increase(self.location, name, mod, state)
 
 class Unbind:
     def __init__(self,sub,sublist,location,k):
@@ -246,8 +265,7 @@ class Simulation:
             print BLUE+dirname+RED+" already exists !!"+ENDC
             dirname = raw_input(YELLOW+"Please input other name : "+ENDC)
             while swt == 1:
-                if os.path.exists(pwd+"/"+dirname):
-                    dirname = raw_input(RED+"ERROR "+GREEN+"Please input other name : "+ENDC)
+                if os.path.exists(pwd+"/"+dirname):dirname = raw_input(RED+"ERROR "+GREEN+"Please input other name : "+ENDC)
                 else: break
         os.mkdir(dirname)
         os.system('chmod +x loadresult.py')
