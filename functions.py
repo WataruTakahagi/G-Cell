@@ -39,20 +39,27 @@ class Reactions:
         self.m = np.zeros((len(self.f),len(sublist)+5))
         for i in range(len(self.f)):
             if self.f[i] == 'a':
-                self.m[i][len(sublist)+2] = 0.23
-                self.m[i][len(sublist)+4] = 0.73
+                self.m[i][len(sublist)+2] = 0.23#a(r)
+                self.m[i][len(sublist)+4] = 0.74#t(l)
             if self.f[i] == 't':
-                self.m[i][len(sublist)+2] = 0.24
-                self.m[i][len(sublist)+4] = 0.74
+                self.m[i][len(sublist)+2] = 0.24#t(r)
+                self.m[i][len(sublist)+4] = 0.73#a(l)
             if self.f[i] == 'g':
-                self.m[i][len(sublist)+2] = 0.25
-                self.m[i][len(sublist)+4] = 0.75
+                self.m[i][len(sublist)+2] = 0.25#g(r)
+                self.m[i][len(sublist)+4] = 0.76#c(l)
             if self.f[i] == 'c':
-                self.m[i][len(sublist)+2] = 0.26
-                self.m[i][len(sublist)+4] = 0.76
+                self.m[i][len(sublist)+2] = 0.26#c(r)
+                self.m[i][len(sublist)+4] = 0.75#g(l)
             if self.f[i] == 'M':
-                self.m[i][len(sublist)+2] = 0.88
-                self.m[i][len(sublist)+4] = 0.88
+                self.m[i][len(sublist)+2] = 0.28#mutation(r)
+                self.m[i][len(sublist)+4] = 0.78#mutation(l)
+            #round(self.m[0][len(sublist)+2],0) # = 0 reading
+            #round(self.m[0][len(sublist)+4],0) # = 1 lagging
+            #*.*3 = a
+            #*.*4 = t
+            #*.*5 = g
+            #*.*6 = c
+            #*.*8 = M
         return self.f,self.m
 
     def Monomer(self,name,num,sublist):
@@ -243,7 +250,7 @@ class Simulation:
                     dirname = raw_input(RED+"ERROR "+GREEN+"Please input other name : "+ENDC)
                 else: break
         os.mkdir(dirname)
+        os.system('chmod +x loadresult.py')
         if os.path.exists(pwd+'/result.npy'):shutil.move('result.npy',pwd+"/"+dirname)
         if os.path.exists(pwd+'/loadresult.py'):shutil.move('loadresult.py',pwd+"/"+dirname)
-        for name in glob.glob('*.png'):
-            shutil.move(name,pwd+"/"+dirname)
+        for name in glob.glob('*.png'):shutil.move(name,pwd+"/"+dirname)
