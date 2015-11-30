@@ -25,6 +25,8 @@ class Reactions:
         self.time = time
         self.sl = []
         self.evl = []
+        self.db = []
+        self.original = open('sequence.txt','r').read()
 
     def setup(self):
         print "------------------------------------------------------------------"
@@ -32,6 +34,17 @@ class Reactions:
         print "| "+GREEN+"MODEL : "+YELLOW+"Escherichia coli K-12 substr. MG1655                  "+ENDC+" |"
         print "------------------------------------------------------------------"
         return self.time, self.sl, self.evl
+
+    def Target(self,tg):
+        self.tg = tg
+        return self.tg
+
+    def Initdata(self):
+        return self.db
+
+    def addDB(self,gene,protein,resion,list):
+        list.append([gene,protein,Reactions().Getbase(resion)])
+        return list
 
     def Readseq(self, readseq, sublist):
         seq = open(readseq)
@@ -63,24 +76,18 @@ class Reactions:
             for i in range(len(number)):
                 if round((ID-0.2)*100,0) == number[i] or round((ID-0.7)*100,0) == number[i]: self.base = base[i]
             return self.rl,self.base
-            """
-            print Reactions().Baseinfo(mod[i][Reactions().Getindex('r',SubList)],mod)[1]
-            print Reactions().Baseinfo(0.23,mod)
-            print Reactions().Baseinfo(0.24,mod)
-            print Reactions().Baseinfo(0.25,mod)
-            print Reactions().Baseinfo(0.26,mod)
-            print Reactions().Baseinfo(0.73,mod)
-            print Reactions().Baseinfo(0.74,mod)
-            print Reactions().Baseinfo(0.75,mod)
-            print Reactions().Baseinfo(0.76,mod)
-            print Reactions().Baseinfo(0.28,mod)
-            print Reactions().Baseinfo(0.78,mod)
-            """
+            #print Reactions().Baseinfo(mod[i][Reactions().Getindex('r',SubList)],mod)[1]
+            #print Reactions().Baseinfo(0.23,mod)
 
-    def Monomer(self,name,num,sublist):
+    def Monomer(self,name,num,sublist,target):
         self.name = str(name)
+        self.jd,self.gene = Database(target).Match(self.name)
         self.num = num
-        print "{:<20}".format(YELLOW+self.name+ENDC)+" = "+BLUE+`self.num`+ENDC
+        if self.jd == 1:
+            print GREEN+'OK '+ENDC+': '+GREEN+"{:<5}".format(self.gene)+ENDC+"{:<3}".format('->')+GREEN+"{:<5}".format(self.name)+ENDC+"{:>33}".format(' = ')+BLUE+`self.num`+ENDC
+        else:
+            self.num = 0
+            print RED+'NG '+ENDC+': '+RED+"{:<5}".format(self.gene)+ENDC+"{:<3}".format('-|')+RED+"{:<5}".format(self.name)+ENDC+"{:>33}".format(' = ')+BLUE+`self.num`+ENDC
         gn = [self.name,self.num]
         sublist.append(gn)
         return sublist
@@ -88,7 +95,7 @@ class Reactions:
     def Complex(self,name,num,complexlist):
         self.name = str(name)
         self.num = num
-        print "{:<55}".format(RED+self.name+ENDC)+" = "+BLUE+`self.num`+ENDC
+        print GREEN+'OK '+ENDC+': '+"{:<52}".format(YELLOW+self.name+ENDC)+' = '+BLUE+`self.num`+ENDC
         gn = [self.name,self.num]
         complexlist.append(gn)
         return complexlist
@@ -98,14 +105,13 @@ class Reactions:
 
     def Getindex(self, name, sublist):
         for i in range(len(sublist)):
-            if sublist[i][0] == name:
-                return i
-        if name == "ds":
-            return len(sublist)
-        if name == "r":
-            return len(sublist)+1
-        if name == "l":
-            return len(sublist)+3
+            if sublist[i][0] == name: return i
+        if name == "ds": return len(sublist)
+        if name == "r": return len(sublist)+1
+        if name == "l": return len(sublist)+3
+
+    def Getbase(self, rg):
+        return self.original[rg[0]-1:rg[1]-1]
 
     def Increase(self, location, name, mod, sublist):
         mod[location][Reactions().Getindex(name,sublist)] += 1
@@ -118,6 +124,67 @@ class Reactions:
     def Events(self, ev, evlist):
         evlist.append(ev)
         return evlist
+
+class Database:
+    def __init__(self,target):
+        self.gcellDB = Reactions().Initdata()
+        Reactions().addDB('yciV','YciV',[1321244,1322125],self.gcellDB)
+        Reactions().addDB('ydaV','YdaV',[1420007,1420753],self.gcellDB)
+        Reactions().addDB('ycdX','YcdX',[1098102,1098839],self.gcellDB)
+        Reactions().addDB('dnaB','CrfC',[0,100],self.gcellDB)
+        Reactions().addDB('rarA','RarA',[937217,938560],self.gcellDB)
+        Reactions().addDB('hda','Hda',[2616097,2616798],self.gcellDB)
+        Reactions().addDB('diaA','DiaA',[3293831,3294421],self.gcellDB)
+        Reactions().addDB('holB','HolB',[1154985,1155989],self.gcellDB)
+        Reactions().addDB('holA','HolA',[669797,670828],self.gcellDB)
+        Reactions().addDB('dnaB','Tus',[0,100],self.gcellDB)
+        Reactions().addDB('dnaC','DnaC',[4598261,4598998],self.gcellDB)
+        Reactions().addDB('dnaB','Dam',[0,100],self.gcellDB)
+        Reactions().addDB('dnaG','DnaG',[3209129,3210874],self.gcellDB)
+        Reactions().addDB('dnaN','DnaN',[3879244,3880344],self.gcellDB)
+        Reactions().addDB('dnaT','DnaT',[4599001,4599540],self.gcellDB)
+        Reactions().addDB('rep','Rep',[3958700,3960721],self.gcellDB)
+        Reactions().addDB('priB','PriB',[4423543,4423857],self.gcellDB)
+        Reactions().addDB('dnaQ','DnaQ',[236067,236798],self.gcellDB)
+        Reactions().addDB('dnaA','DnaA',[3880349,3881752],self.gcellDB)
+        Reactions().addDB('mukE','MukE',[974845,975549],self.gcellDB)
+        Reactions().addDB('mukB','MukB',[975549,980009],self.gcellDB)
+        Reactions().addDB('mukF','MukF',[973542,974864],self.gcellDB)
+        Reactions().addDB('nrdD','NrdD',[4458545,4460683],self.gcellDB)
+        Reactions().addDB('dnaB','RecQ',[1,100],self.gcellDB)
+        Reactions().addDB('dnaB','DinB',[1,100],self.gcellDB)
+        Reactions().addDB('dnaB','NrdB',[1,100],self.gcellDB)
+        Reactions().addDB('dnaB','NrdE',[1,100],self.gcellDB)
+        Reactions().addDB('dnaB','NrdF',[1,100],self.gcellDB)
+        Reactions().addDB('dnaB','HolC',[1,100],self.gcellDB)
+        Reactions().addDB('dnaB','HolD',[1,100],self.gcellDB)
+        Reactions().addDB('dnaB','LigB',[1,100],self.gcellDB)
+        Reactions().addDB('dnaB','PriA',[1,100],self.gcellDB)
+        Reactions().addDB('dnaB','LigA',[1,100],self.gcellDB)
+        Reactions().addDB('dnaB','SbcC',[1,100],self.gcellDB)
+        Reactions().addDB('dnaB','DnaE',[1,100],self.gcellDB)
+        Reactions().addDB('dnaB','Ssb',[1,100],self.gcellDB)
+        Reactions().addDB('dnaB','SbcD',[1,100],self.gcellDB)
+        Reactions().addDB('dnaB','DnaB',[1,100],self.gcellDB)
+        Reactions().addDB('dnaB','HolE',[1,100],self.gcellDB)
+        Reactions().addDB('dnaB','RecF',[1,100],self.gcellDB)
+        Reactions().addDB('dnaB','LexA',[1,100],self.gcellDB)
+        Reactions().addDB('dnaB','DnaK',[1,100],self.gcellDB)
+        Reactions().addDB('dnaB','DnaJ',[1,100],self.gcellDB)
+        Reactions().addDB('dnaB','MutT',[1,100],self.gcellDB)
+        Reactions().addDB('dnaB','DnaX',[1,100],self.gcellDB)
+        Reactions().addDB('dnaB','GspB',[1,100],self.gcellDB)
+        Reactions().addDB('dnaB','UvrD',[1,100],self.gcellDB)
+        Reactions().addDB('dnaB','PolA',[1,100],self.gcellDB)
+        Reactions().addDB('dnaB','NrdA',[1,100],self.gcellDB)
+        Reactions().addDB('dnaB','PriC',[1,100],self.gcellDB)
+        self.seq = open(target,'r').read()
+
+    def Match(self, protein):
+        for i in self.gcellDB:
+            if protein == i[1]:
+                if i[2] in self.seq: return 1,i[0]
+                else: return 0,i[0]
 
 class Compose:
     def __init__(self,name,components,comnum,k):
@@ -154,26 +221,6 @@ class Decompose:
             state[Reactions().Getindex(self.components[i],state)][1] += self.comnum[i]
         state[Reactions().Getindex(self.name,state)][1] -= 1
         return state
-
-class Bind:
-    def __init__(self,sub,sublist,k):
-        self.location = 0
-
-    def propensity(self, state, location, k):
-        return
-
-    def execute(self, state, location, k):
-        Reactions().Increase(self.location, name, mod, state)
-
-class Unbind:
-    def __init__(self,sub,sublist,location,k):
-        pass
-
-    def propensity(self, state, location, k):
-        return
-
-    def execute(self, state, location, k):
-        return
 
 class Showdata:
     def __init__(self):
@@ -223,6 +270,9 @@ class Simulation:
         for i in range(len(events)):
                 atotal += events[i].propensity(state)
                 alist.append(events[i].propensity(state))
+        if atotal == 0:
+            print RED+'\ncan\'t continue '+ENDC+': '+BLUE+'Inviable environment'+ENDC
+            sys.exit()
         tau = float((1/atotal)*math.log1p(1/rand()))
         newt = time + tau
         a0, l = 0, 0
@@ -234,7 +284,7 @@ class Simulation:
         news = events[j].execute(state)
         return newt, news
 
-    def run(self, t, tend, SubList, events, logt, logd, mod):
+    def Run(self, t, tend, SubList, events, logt, logd, mod):
         while t <= tend:
             t, SubList = Simulation().step(t, SubList, events)
             logt, logd = Showdata().getdata(t, SubList, logt, logd)
@@ -248,12 +298,22 @@ class Simulation:
         plt.savefig("error.png")
         plt.close()
 
-    def Save(self, mod):
+    def Save(self, mod, sublist):
         np.save('result.npy', mod)
-        f = open('loadresult.py','w')
+        label = []
+        for name in sublist:
+            label.append(name[0])
+        label.append('Double/Single Strand')
+        label.append('ReadingOriginal')
+        label.append('ReadingReplicated')
+        label.append('LaggingOriginal')
+        label.append('LaggingReplicated')
+        label = ",".join(label)
+        f = open('npy2csv.py','w')
         f.write("#!/usr/bin/env python\n")
         f.write("import numpy as np\n")
         f.write("f = np.load('result.npy')\n")
+        f.write("np.savetxt('result.csv', f, fmt='%.02f',delimiter=',',header=\""+label+"\")\n")
         f.write("print f\n")
         f.close()
 
@@ -268,7 +328,7 @@ class Simulation:
                 if os.path.exists(pwd+"/"+dirname):dirname = raw_input(RED+"ERROR "+GREEN+"Please input other name : "+ENDC)
                 else: break
         os.mkdir(dirname)
-        os.system('chmod +x loadresult.py')
+        os.system('chmod +x npy2csv.py')
         if os.path.exists(pwd+'/result.npy'):shutil.move('result.npy',pwd+"/"+dirname)
-        if os.path.exists(pwd+'/loadresult.py'):shutil.move('loadresult.py',pwd+"/"+dirname)
+        if os.path.exists(pwd+'/npy2csv.py'):shutil.move('npy2csv.py',pwd+"/"+dirname)
         for name in glob.glob('*.png'):shutil.move(name,pwd+"/"+dirname)
