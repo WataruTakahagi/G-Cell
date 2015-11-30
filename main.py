@@ -98,7 +98,6 @@ Reactions().Increase(0,'DnaB',mod,SubList)
 Reactions().Increase(0,'DnaB',mod,SubList)
 Reactions().Decrease(0,'DnaA',mod,SubList)
 
-"""
 #run process
 logt, logd, t, tend = Showdata().logger(time, SubList, 0, 0.01)
 
@@ -141,4 +140,3 @@ Showdata().png(['DNA_polymerase_III_core_enzyme','DNA_polymerase_III_preinitiati
 #Finalize
 Simulation().Save(mod,SubList)
 Simulation().Makedata('default')
-"""
