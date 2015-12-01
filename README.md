@@ -1,4 +1,4 @@
-# whole-ecoli-replication
+## G-Cell : Genome based prokaryotic cell simulation platform
 ```shell
 %python xRay.py
 X-ray STRENGTH (%) = 0.1
