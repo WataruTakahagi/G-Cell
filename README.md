@@ -1,18 +1,8 @@
 # whole-ecoli-replication
 ```shell
-#import public module
-import sys
-import math
-import re
-import csv
-import os
-import shutil
-import numpy as np
-import matplotlib.pyplot as plt
-from numpy.random import *
-import glob
+%python xRay.py
+X-ray STRENGTH (%) = 0.1
+MUTATION = 0.09944662072235663 %
 
-#import whole-ecoli replication module
-from functions import *
-from proteins import *
+%python main.py
 ```
