@@ -168,6 +168,8 @@ class Database:
         Reactions().addDB('dnaB','DnaB',[4262337,4263752],self.gcellDB)
         Reactions().addDB('holE','HolE',[1923132,1923362],self.gcellDB)
         Reactions().addDB('recF','RecF',[3878171,3879244],self.gcellDB)
+        Reactions().addDB('recR','RecR',[493629,494234],self.gcellDB)
+        Reactions().addDB('recO','RecO',[2699763,2700491],self.gcellDB)
         Reactions().addDB('lexA','LexA',[4255138,4255746],self.gcellDB)
         Reactions().addDB('dnaK','DnaK',[12163,14079],self.gcellDB)
         Reactions().addDB('dnaJ','DnaJ',[14168,15298],self.gcellDB)

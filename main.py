@@ -27,7 +27,7 @@ from proteins import *
 time, SubList, events = Reactions().setup()
 target = Reactions().Target('mutationseq.txt')
 
-#Substance generate
+#Generate Monomer
 Reactions().Monomer('YciV',600,SubList,target)#RNA/ssDNA exonuclease 5'->3'specific(http://ecocyc.org/ECOLI/NEW-IMAGE?type=ENZYME&object=G6634-MONOMER)
 Reactions().Monomer('YdaV',600,SubList,target)#Rac prophage; predicted DNA replication protein(http://ecocyc.org/ECOLI/NEW-IMAGE?type=ENZYME&object=G6684-MONOMER)
 Reactions().Monomer('YcdX',600,SubList,target)#zinc-binding phosphatase(http://ecocyc.org/ECOLI/NEW-IMAGE?type=ENZYME&object=G6540-MONOMER)
@@ -68,6 +68,8 @@ Reactions().Monomer('SbcD',600,SubList,target)#ATP-dependent dsDNA exonuclease(h
 Reactions().Monomer('DnaB',600,SubList,target)#replicative DNA helicase(http://ecocyc.org/ECOLI/NEW-IMAGE?type=ENZYME&object=EG10236-MONOMER)
 Reactions().Monomer('HolE',600,SubList,target)#DNA polymerase III, theta subunit(http://ecocyc.org/ECOLI/NEW-IMAGE?type=ENZYME&object=EG11505-MONOMER)
 Reactions().Monomer('RecF',600,SubList,target)#ssDNA and dsDNA binding, ATP binding(http://ecocyc.org/ECOLI/NEW-IMAGE?type=ENZYME&object=EG10828-MONOMER)
+Reactions().Monomer('RecR',600,SubList,target)#recombination and repair(http://ecocyc.org/ECOLI/NEW-IMAGE?type=POLYPEPTIDE&object=EG10834-MONOMER)
+Reactions().Monomer('RecO',600,SubList,target)#protein interacts with RecR and possibly RecF proteins(http://ecocyc.org/gene?orgid=ECOLI&id=EG10832-MONOMER)
 Reactions().Monomer('LexA',600,SubList,target)#LexA DNA-binding transcriptional repressor(http://ecocyc.org/ECOLI/NEW-IMAGE?type=ENZYME&object=PD00205)
 Reactions().Monomer('DnaK',600,SubList,target)#chaperone protein DnaK(http://ecocyc.org/ECOLI/NEW-IMAGE?type=ENZYME&object=EG10241-MONOMER)
 Reactions().Monomer('DnaJ',600,SubList,target)#chaperone protein DnaJ(http://ecocyc.org/ECOLI/NEW-IMAGE?type=ENZYME&object=EG10240-MONOMER)
@@ -78,65 +80,145 @@ Reactions().Monomer('UvrD',600,SubList,target)#ssDNA translocase and dsDNA helic
 Reactions().Monomer('PolA',600,SubList,target)#DNA polymerase I, 5'-->3'polymerase, 5'-->3'and3'-->5'exonuclease(http://ecocyc.org/ECOLI/NEW-IMAGE?type=ENZYME&object=EG10746-MONOMER)
 Reactions().Monomer('NrdA',600,SubList,target)#ribonucleoside diphosphate reductase 1, alpha atom fun subunit dimer(http://ecocyc.org/ECOLI/NEW-IMAGE?type=ENZYME&object=NRDA-MONOMER)
 Reactions().Monomer('PriC',600,SubList,target)#primosomal replication protein N''(http://ecocyc.org/ECOLI/NEW-IMAGE?type=ENZYME&object=EG10765-MONOMER)
-Reactions().Complex('primosome',0,SubList)
-Reactions().Complex('replicative_DNA_helicase',0,SubList)
-Reactions().Complex('primosomal_protein_DnaT',0,SubList)
-Reactions().Complex('primosomal_replication_protein_N',0,SubList)
-Reactions().Complex('primosome_factor_N_ap',0,SubList)
-Reactions().Complex('primosomal_replication_protein_N_ap2',0,SubList)
-Reactions().Complex('DNA_primase',0,SubList)
+
+#Generate Complex
+Reactions().Complex('zink_binding_phosphatase',0,SubList)
+Reactions().Complex('DnaA_initiator_associating_factor',0,SubList)
 Reactions().Complex('DNA_polymerase_III_holoenzyme',0,SubList)
 Reactions().Complex('DNA_polymerase_III_core_enzyme',0,SubList)
 Reactions().Complex('DNA_polymerase_III_preinitiation_complex',0,SubList)
 Reactions().Complex('DNA_polymerase_III_beta_subunit',0,SubList)
 Reactions().Complex('DNA_polymerase_III_tau_subunit_dimer',0,SubList)
 Reactions().Complex('DNA_polymerase_III_psi_chi_subunit',0,SubList)
+Reactions().Complex('replicative_DNA_helicase',0,SubList)
+Reactions().Complex('DNA_primase',0,SubList)
+Reactions().Complex('primosomal_protein_DnaT',0,SubList)
+Reactions().Complex('primosomal_replication_protein_N',0,SubList)
+Reactions().Complex('primosome',0,SubList)
+Reactions().Complex('Rep_helicase',0,SubList)
+Reactions().Complex('cell_division_protein',0,SubList)
+Reactions().Complex('MukEF_complex',0,SubList)
+Reactions().Complex('MukF_dimer',0,SubList)
+Reactions().Complex('bacterial_condensin_MukBEF',0,SubList)
+Reactions().Complex('ribonucleoside_triphosphate_reductase',0,SubList)
+Reactions().Complex('ribonucleoside_diphosphate_reductase_1_alpha_subunit_dimer',0,SubList)
+Reactions().Complex('ribonucleoside_diphosphate_reductase_1_beta_subunit_dimer',0,SubList)
+Reactions().Complex('ribonucleoside_diphosphate_reductase_1',0,SubList)
+Reactions().Complex('ribonucleoside_diphosphate_reductase_2_alpha_subunit_dimer',0,SubList)
+Reactions().Complex('ribonucleoside_diphosphate_reductase_2_beta_subunit_dimer',0,SubList)
+Reactions().Complex('ribonucleoside_diphosphate_reductase_2',0,SubList)
+Reactions().Complex('SbcCD_ATP_dependent_dsDNA_exonuclease',0,SubList)
+Reactions().Complex('ssDNA_binding_protein',0,SubList)
+Reactions().Complex('RecFOR_complex',0,SubList)
+Reactions().Complex('LexA_DNA_binding_transcriptional_repressor',0,SubList)
+Reactions().Complex('chaperone_protein_DnaJ',0,SubList)
+Reactions().Complex('ssDNA_translocase_and_dsDNA_helicase',0,SubList)
 
-#Sequence data
+#Sequence data, Make logger
 seq, mod = Reactions().Readseq(target,SubList)
-Reactions().Increase(0,'DnaB',mod,SubList)
-Reactions().Increase(0,'DnaB',mod,SubList)
-Reactions().Decrease(0,'DnaA',mod,SubList)
-
-#run process
 logt, logd, t, tend = Showdata().logger(time, SubList, 0, 0.01)
 
-#primosome
-Reactions().Events(Compose('replicative_DNA_helicase',['DnaB'],[6],1.0e-9),events)
-Reactions().Events(Compose('primosomal_protein_DnaT',['DnaT'],[3],1.0e-2),events)
-Reactions().Events(Compose('primosomal_replication_protein_N',['PriB'],[2],5.0e-1),events)
-Reactions().Events(Compose('primosome',['replicative_DNA_helicase','primosomal_protein_DnaT','primosomal_replication_protein_N','PriA','PriC','DnaG'],[1,1,1,1,1,1],1.0e-8),events)
-Reactions().Events(Decompose('replicative_DNA_helicase',['DnaB'],[6],10),events)
-Reactions().Events(Decompose('primosomal_protein_DnaT',['DnaT'],[3],1),events)
-Reactions().Events(Decompose('primosomal_replication_protein_N',['PriB'],[2],1),events)
-Reactions().Events(Decompose('primosome',['replicative_DNA_helicase','primosomal_protein_DnaT','primosomal_replication_protein_N','PriA','PriC','DnaG'],[1,1,1,1,1,1],10),events)
-#Reactions().Events(primosome(0,mod,0.00),events)#delete location info.
-
-#DNA_polymerase_III_holoenzyme
-Reactions().Events(Compose('DNA_polymerase_III_core_enzyme',['DnaE','DnaQ','HolE'],[1,1,1],1.0e-2),events)
-Reactions().Events(Compose('DNA_polymerase_III_preinitiation_complex',['DnaX','HolB','HolA'],[3,1,1],1.0e-9),events)
-Reactions().Events(Compose('DNA_polymerase_III_beta_subunit',['DnaN'],[2],5.0e-1),events)
-Reactions().Events(Compose('DNA_polymerase_III_tau_subunit_dimer',['DnaX'],[2],5.0e-1),events)
-Reactions().Events(Compose('DNA_polymerase_III_psi_chi_subunit',['HolC','HolD'],[1,1],5.0e-1),events)
-Reactions().Events(Compose('DNA_polymerase_III_holoenzyme',['DNA_polymerase_III_core_enzyme','DNA_polymerase_III_preinitiation_complex','DNA_polymerase_III_beta_subunit','DNA_polymerase_III_tau_subunit_dimer','DNA_polymerase_III_psi_chi_subunit'],[3,1,2,1,4],1.0e-15),events)
-#Reactions().Events(DNA_polymerase_III_holoenzyme(0,mod,0.00),events)
+#Events setting
+Reactions().Events(Compose('zink_binding_phosphatase',['YcdX'],[3],1.0e-2),events)#zink-binding phosphatase
+Reactions().Events(Decompose('zink_binding_phosphatase',['YcdX'],[3],1),events)#zink-binding phosphatase
+Reactions().Events(Compose('DnaA_initiator_associating_factor',['DiaA'],[4],1.0e-4),events)#DnaA initiator-associating factor
+Reactions().Events(Decompose('DnaA_initiator_associating_factor',['DiaA'],[4],1),events)#DnaA initiator-associating factor
+Reactions().Events(Compose('DNA_polymerase_III_core_enzyme',['DnaE','DnaQ','HolE'],[1,1,1],1.0e-2),events)#DNA_polymerase_III_holoenzyme
+Reactions().Events(Compose('DNA_polymerase_III_preinitiation_complex',['DnaX','HolB','HolA'],[3,1,1],1.0e-9),events)#DNA_polymerase_III_holoenzyme
+Reactions().Events(Compose('DNA_polymerase_III_beta_subunit',['DnaN'],[2],5.0e-1),events)#DNA_polymerase_III_holoenzyme
+Reactions().Events(Compose('DNA_polymerase_III_tau_subunit_dimer',['DnaX'],[2],5.0e-1),events)#DNA_polymerase_III_holoenzyme
+Reactions().Events(Compose('DNA_polymerase_III_psi_chi_subunit',['HolC','HolD'],[1,1],5.0e-1),events)#DNA_polymerase_III_holoenzyme
+Reactions().Events(Compose('DNA_polymerase_III_holoenzyme',['DNA_polymerase_III_core_enzyme','DNA_polymerase_III_preinitiation_complex','DNA_polymerase_III_beta_subunit','DNA_polymerase_III_tau_subunit_dimer','DNA_polymerase_III_psi_chi_subunit'],[3,1,2,1,4],1.0e-15),events)#DNA_polymerase_III_holoenzyme
+Reactions().Events(Decompose('DNA_polymerase_III_core_enzyme',['DnaE','DnaQ','HolE'],[1,1,1],1),events)#DNA_polymerase_III_holoenzyme
+Reactions().Events(Decompose('DNA_polymerase_III_preinitiation_complex',['DnaX','HolB','HolA'],[3,1,1],1),events)#DNA_polymerase_III_holoenzyme
+Reactions().Events(Decompose('DNA_polymerase_III_beta_subunit',['DnaN'],[2],1),events)#DNA_polymerase_III_holoenzyme
+Reactions().Events(Decompose('DNA_polymerase_III_tau_subunit_dimer',['DnaX'],[2],1),events)#DNA_polymerase_III_holoenzyme
+Reactions().Events(Decompose('DNA_polymerase_III_psi_chi_subunit',['HolC','HolD'],[1,1],1),events)#DNA_polymerase_III_holoenzyme
+Reactions().Events(Decompose('DNA_polymerase_III_holoenzyme',['DNA_polymerase_III_core_enzyme','DNA_polymerase_III_preinitiation_complex','DNA_polymerase_III_beta_subunit','DNA_polymerase_III_tau_subunit_dimer','DNA_polymerase_III_psi_chi_subunit'],[3,1,2,1,4],1),events)#DNA_polymerase_III_holoenzyme
+Reactions().Events(Compose('replicative_DNA_helicase',['DnaB'],[6],1.0e-9),events)#primosome
+Reactions().Events(Compose('primosomal_protein_DnaT',['DnaT'],[3],1.0e-2),events)#primosome
+Reactions().Events(Compose('primosomal_replication_protein_N',['PriB'],[2],5.0e-1),events)#primosome
+Reactions().Events(Compose('primosome',['replicative_DNA_helicase','primosomal_protein_DnaT','primosomal_replication_protein_N','PriA','PriC','DnaG'],[1,1,1,1,1,1],1.0e-8),events)#primosome
+Reactions().Events(Decompose('replicative_DNA_helicase',['DnaB'],[6],1),events)#primosome
+Reactions().Events(Decompose('primosomal_protein_DnaT',['DnaT'],[3],1),events)#primosome
+Reactions().Events(Decompose('primosomal_replication_protein_N',['PriB'],[2],1),events)#primosome
+Reactions().Events(Decompose('primosome',['replicative_DNA_helicase','primosomal_protein_DnaT','primosomal_replication_protein_N','PriA','PriC','DnaG'],[1,1,1,1,1,1],1),events)#primosome
+Reactions().Events(Compose('Rep_helicase',['Rep'],[2],5.0e-1),events)#Rep_helicase
+Reactions().Events(Decompose('Rep_helicase',['Rep'],[2],1),events)#Rep_helicase
+Reactions().Events(Compose('cell_division_protein',['MukB'],[2],5.0e-1),events)#bacterial_condensin_MukBEF
+Reactions().Events(Compose('MukEF_complex',['MukE','MukF_dimer'],[4,1],1.0e-9),events)#bacterial_condensin_MukBEF
+Reactions().Events(Compose('MukF_dimer',['MukF'],[2],5.0e-1),events)#bacterial_condensin_MukBEF
+Reactions().Events(Compose('bacterial_condensin_MukBEF',['cell_division_protein','MukEF_complex'],[1,1],5.0e-1),events)#bacterial_condensin_MukBEF
+Reactions().Events(Decompose('cell_division_protein',['MukB'],[2],1),events)#bacterial_condensin_MukBEF
+Reactions().Events(Decompose('MukEF_complex',['MukE','MukF_dimer'],[4,1],1),events)#bacterial_condensin_MukBEF
+Reactions().Events(Decompose('MukF_dimer',['MukF'],[2],1),events)#bacterial_condensin_MukBEF
+Reactions().Events(Decompose('bacterial_condensin_MukBEF',['cell_division_protein','MukEF_complex'],[1,1],1),events)#bacterial_condensin_MukBEF
+Reactions().Events(Compose('ribonucleoside_triphosphate_reductase',['NrdD'],[2],5.0e-1),events)#ribonucleoside-triphosphate reductase
+Reactions().Events(Decompose('ribonucleoside_triphosphate_reductase',['NrdD'],[2],1),events)#ribonucleoside-triphosphate reductase
+Reactions().Events(Compose('ribonucleoside_diphosphate_reductase_1_alpha_subunit_dimer',['NrdA'],[2],5.0e-1),events)#ribonucleoside diphosphate reductase 1
+Reactions().Events(Compose('ribonucleoside_diphosphate_reductase_1_beta_subunit_dimer',['NrdB'],[2],5.0e-1),events)#ribonucleoside diphosphate reductase 1
+Reactions().Events(Compose('ribonucleoside_diphosphate_reductase_1',['ribonucleoside_diphosphate_reductase_1_alpha_subunit_dimer','ribonucleoside_diphosphate_reductase_1_beta_subunit_dimer'],[1,1],5.0e-1),events)#ribonucleoside diphosphate reductase 1
+Reactions().Events(Decompose('ribonucleoside_diphosphate_reductase_1_alpha_subunit_dimer',['NrdA'],[2],1),events)#ribonucleoside diphosphate reductase 1
+Reactions().Events(Decompose('ribonucleoside_diphosphate_reductase_1_beta_subunit_dimer',['NrdB'],[2],1),events)#ribonucleoside diphosphate reductase 1
+Reactions().Events(Decompose('ribonucleoside_diphosphate_reductase_1',['ribonucleoside_diphosphate_reductase_1_alpha_subunit_dimer','ribonucleoside_diphosphate_reductase_1_beta_subunit_dimer'],[1,1],1),events)#ribonucleoside diphosphate reductase 1
+Reactions().Events(Compose('ribonucleoside_diphosphate_reductase_2_alpha_subunit_dimer',['NrdE'],[2],5.0e-1),events)#ribonucleoside-diphosphate reductase 2
+Reactions().Events(Compose('ribonucleoside_diphosphate_reductase_2_beta_subunit_dimer',['NrdF'],[2],5.0e-1),events)#ribonucleoside-diphosphate reductase 2
+Reactions().Events(Compose('ribonucleoside_diphosphate_reductase_2',['ribonucleoside_diphosphate_reductase_2_alpha_subunit_dimer','ribonucleoside_diphosphate_reductase_2_beta_subunit_dimer'],[1,1],5.0e-1),events)#ribonucleoside-diphosphate reductase 2
+Reactions().Events(Decompose('ribonucleoside_diphosphate_reductase_2_alpha_subunit_dimer',['NrdE'],[2],1),events)#ribonucleoside-diphosphate reductase 2
+Reactions().Events(Decompose('ribonucleoside_diphosphate_reductase_2_beta_subunit_dimer',['NrdF'],[2],1),events)#ribonucleoside-diphosphate reductase 2
+Reactions().Events(Decompose('ribonucleoside_diphosphate_reductase_2',['ribonucleoside_diphosphate_reductase_2_alpha_subunit_dimer','ribonucleoside_diphosphate_reductase_2_beta_subunit_dimer'],[1,1],1),events)#ribonucleoside-diphosphate reductase 2
+Reactions().Events(Compose('SbcCD_ATP_dependent_dsDNA_exonuclease',['SbcC','SbcD'],[1,1],5.0e-1),events)#SbcCD ATP-dependent dsDNA exonuclease
+Reactions().Events(Decompose('SbcCD_ATP_dependent_dsDNA_exonuclease',['SbcC','SbcD'],[1,1],1),events)#SbcCD ATP-dependent dsDNA exonuclease
+Reactions().Events(Compose('ssDNA_binding_protein',['Ssb'],[4],1.0e-4),events)#ssDNA-binding protein
+Reactions().Events(Decompose('ssDNA_binding_protein',['Ssb'],[4],1),events)#ssDNA-binding protein
+Reactions().Events(Compose('RecFOR_complex',['RecF','RecR','RecO'],[1,1,1],1.0e-2),events)#RecFOR complex
+Reactions().Events(Decompose('RecFOR_complex',['RecF','RecR','RecO'],[1,1,1],1),events)#RecFOR complex
+Reactions().Events(Compose('LexA_DNA_binding_transcriptional_repressor',['LexA'],[2],5.0e-1),events)#LexA DNA-binding transcriptional repressor
+Reactions().Events(Decompose('LexA_DNA_binding_transcriptional_repressor',['LexA'],[2],1),events)#LexA DNA-binding transcriptional repressor
+Reactions().Events(Compose('chaperone_protein_DnaJ',['DnaJ'],[2],5.0e-1),events)#chaperone protein DnaJ
+Reactions().Events(Decompose('chaperone_protein_DnaJ',['DnaJ'],[2],1),events)#chaperone protein DnaJ
+Reactions().Events(Compose('ssDNA_translocase_and_dsDNA_helicase',['UvrD'],[2],5.0e-1),events)#ssDNA translocase and dsDNA helicase
+Reactions().Events(Decompose('ssDNA_translocase_and_dsDNA_helicase',['UvrD'],[2],1),events)#ssDNA translocase and dsDNA helicase
 
 #simulation
 Simulation().Run(t, tend, SubList, events, logt, logd, mod)
 
 #showdata, make .png
-Showdata().png(['DnaB','replicative_DNA_helicase'], logt, logd, SubList,'default')
-Showdata().png(['DnaT','primosomal_protein_DnaT'], logt, logd, SubList,'default')
-Showdata().png(['PriB','primosomal_replication_protein_N'], logt, logd, SubList,'default')
-Showdata().png(['replicative_DNA_helicase','primosomal_protein_DnaT','primosomal_replication_protein_N','PriA','PriC','DnaG','primosome'], logt, logd, SubList,'default')
-
+Showdata().png(['YcdX','zink_binding_phosphatase'],logt, logd, SubList,'default')
+Showdata().png(['DiaA','DnaA_initiator_associating_factor'],logt, logd, SubList,'default')
 Showdata().png(['DnaE','DnaQ','HolE','DNA_polymerase_III_core_enzyme'], logt, logd, SubList,'default')
 Showdata().png(['DnaX','HolB','HolA','DNA_polymerase_III_preinitiation_complex'], logt, logd, SubList,'default')
 Showdata().png(['DnaN','DNA_polymerase_III_beta_subunit'], logt, logd, SubList,'default')
 Showdata().png(['DnaX','DNA_polymerase_III_tau_subunit_dimer'], logt, logd, SubList,'default')
 Showdata().png(['HolC','HolD','DNA_polymerase_III_psi_chi_subunit'], logt, logd, SubList,'default')
 Showdata().png(['DNA_polymerase_III_core_enzyme','DNA_polymerase_III_preinitiation_complex','DNA_polymerase_III_beta_subunit','DNA_polymerase_III_tau_subunit_dimer','DNA_polymerase_III_psi_chi_subunit','DNA_polymerase_III_holoenzyme'], logt, logd, SubList,'default')
+Showdata().png(['DnaB','replicative_DNA_helicase'], logt, logd, SubList,'default')
+Showdata().png(['DnaT','primosomal_protein_DnaT'], logt, logd, SubList,'default')
+Showdata().png(['PriB','primosomal_replication_protein_N'], logt, logd, SubList,'default')
+Showdata().png(['replicative_DNA_helicase','primosomal_protein_DnaT','primosomal_replication_protein_N','PriA','PriC','DnaG','primosome'], logt, logd, SubList,'default')
+Showdata().png(['Rep','Rep_helicase'], logt, logd, SubList,'default')
+Showdata().png(['MukB','cell_division_protein'], logt, logd, SubList,'default')
+Showdata().png(['MukF','MukF_dimer'], logt, logd, SubList,'default')
+Showdata().png(['MukE','MukF_dimer','MukEF_complex'], logt, logd, SubList,'default')
+Showdata().png(['cell_division_protein','MukEF_complex','bacterial_condensin_MukBEF'], logt, logd, SubList,'default')
+Showdata().png(['NrdD','ribonucleoside_triphosphate_reductase'], logt, logd, SubList,'default')
+Showdata().png(['NrdA','ribonucleoside_diphosphate_reductase_1_alpha_subunit_dimer'], logt, logd, SubList,'default')
+Showdata().png(['NrdB','ribonucleoside_diphosphate_reductase_1_beta_subunit_dimer'], logt, logd, SubList,'default')
+Showdata().png(['ribonucleoside_diphosphate_reductase_1_alpha_subunit_dimer','ribonucleoside_diphosphate_reductase_1_beta_subunit_dimer','ribonucleoside_diphosphate_reductase_1'], logt, logd, SubList,'default')
+Showdata().png(['NrdE','ribonucleoside_diphosphate_reductase_2_alpha_subunit_dimer'], logt, logd, SubList,'default')
+Showdata().png(['NrdF','ribonucleoside_diphosphate_reductase_2_beta_subunit_dimer'], logt, logd, SubList,'default')
+Showdata().png(['ribonucleoside_diphosphate_reductase_2_alpha_subunit_dimer','ribonucleoside_diphosphate_reductase_2_beta_subunit_dimer','ribonucleoside_diphosphate_reductase_2'], logt, logd, SubList,'default')
+Showdata().png(['SbcC','SbcD','SbcCD_ATP_dependent_dsDNA_exonuclease'], logt, logd, SubList,'default')
+Showdata().png(['Ssb','ssDNA_binding_protein'], logt, logd, SubList,'default')
+Showdata().png(['RecF','RecR','RecO','RecFOR_complex'], logt, logd, SubList,'default')
+Showdata().png(['LexA','LexA_DNA_binding_transcriptional_repressor'], logt, logd, SubList,'default')
+Showdata().png(['DnaJ','chaperone_protein_DnaJ'], logt, logd, SubList,'default')
+Showdata().png(['UvrD','ssDNA_translocase_and_dsDNA_helicase'], logt, logd, SubList,'default')
 
 #Finalize
 Simulation().Save(mod,SubList)
 Simulation().Makedata('default')
+
+#Reactions().Increase(0,'DnaB',mod,SubList)
+#Reactions().Increase(0,'DnaB',mod,SubList)
+#Reactions().Decrease(0,'DnaA',mod,SubList)
