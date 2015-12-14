@@ -18,11 +18,13 @@ import numpy as np
 import matplotlib.pyplot as plt
 from numpy.random import *
 import glob
+import random
 
 #General reactions
 class Reactions:
     def __init__(self,time=0):
         self.time = time
+        self.location = 0
         self.sl = []
         self.evl = []
         self.db = []
@@ -33,7 +35,7 @@ class Reactions:
         print "| "+RED+"A whole-genome based simulation of prokaryotic DNA replication"+ENDC+" |"
         print "| "+GREEN+"MODEL : "+YELLOW+"Escherichia coli K-12 substr. MG1655                  "+ENDC+" |"
         print "------------------------------------------------------------------"
-        return self.time, self.sl, self.evl
+        return self.time, self.location, self.sl, self.evl
 
     def Target(self,tg):
         self.tg = tg
@@ -182,10 +184,18 @@ class Database:
         Reactions().addDB('priC','PriC',[489509,490036],self.gcellDB)
         self.seq = open(target,'r').read()
 
+    def Make(self, name):
+        if name == 'default':name = 'gcell_database.csv'
+        f = open(name,'w')
+        writer = csv.writer(f, lineterminator='\n')
+        for line in self.gcellDB:
+            writer.writerow(line)
+        f.close()
+
     def Match(self, protein):
         for i in self.gcellDB:
             if protein == i[1]:
-                if i[2] in self.seq: return 1,i[0]
+                if i[2] in self.seq or i[2][::-1] in self.seq: return 1,i[0]
                 else: return 0,i[0]
 
 class Compose:
@@ -250,6 +260,14 @@ class Showdata:
             if sublist[i][0] == str(name):
                 plt.plot(logt, logd[i][:], label=sublist[i][0])
 
+    def csv(self,data,name='default'):
+        if name == 'default':name = 'substances.csv'
+        f = open(name,'w')
+        writer = csv.writer(f, lineterminator='\n')
+        for line in data:
+            writer.writerow(line)
+        f.close()
+
     def save(self, name="figure.png"):
         plt.legend()
         plt.savefig(name)
@@ -274,6 +292,7 @@ class Simulation:
                 alist.append(events[i].propensity(state))
         if atotal == 0:
             print RED+'\ncan\'t continue '+ENDC+': '+BLUE+'Inviable environment'+ENDC
+            Simulation().Makedata('default')
             sys.exit()
         tau = float((1/atotal)*math.log1p(1/rand()))
         newt = time + tau
@@ -330,7 +349,8 @@ class Simulation:
                 if os.path.exists(pwd+"/"+dirname):dirname = raw_input(RED+"ERROR "+GREEN+"Please input other name : "+ENDC)
                 else: break
         os.mkdir(dirname)
-        os.system('chmod +x npy2csv.py')
         if os.path.exists(pwd+'/result.npy'):shutil.move('result.npy',pwd+"/"+dirname)
+        if os.path.exists(pwd+'/npy2csv.py'):os.system('chmod +x npy2csv.py')
         if os.path.exists(pwd+'/npy2csv.py'):shutil.move('npy2csv.py',pwd+"/"+dirname)
         for name in glob.glob('*.png'):shutil.move(name,pwd+"/"+dirname)
+        for name in glob.glob('*.csv'):shutil.move(name,pwd+"/"+dirname)

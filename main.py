@@ -19,12 +19,12 @@ import matplotlib.pyplot as plt
 from numpy.random import *
 import glob
 
-#import whole-ecoli replication module
+#import G-Cell module
 from functions import *
 from proteins import *
 
 #setup
-time, SubList, events = Reactions().setup()
+time, location, SubList, events = Reactions().setup()
 target = Reactions().Target('mutationseq.txt')
 
 #Generate Monomer
@@ -80,8 +80,7 @@ Reactions().Monomer('UvrD',600,SubList,target)#ssDNA translocase and dsDNA helic
 Reactions().Monomer('PolA',600,SubList,target)#DNA polymerase I, 5'-->3'polymerase, 5'-->3'and3'-->5'exonuclease(http://ecocyc.org/ECOLI/NEW-IMAGE?type=ENZYME&object=EG10746-MONOMER)
 Reactions().Monomer('NrdA',600,SubList,target)#ribonucleoside diphosphate reductase 1, alpha atom fun subunit dimer(http://ecocyc.org/ECOLI/NEW-IMAGE?type=ENZYME&object=NRDA-MONOMER)
 Reactions().Monomer('PriC',600,SubList,target)#primosomal replication protein N''(http://ecocyc.org/ECOLI/NEW-IMAGE?type=ENZYME&object=EG10765-MONOMER)
-
-#Generate Complex
+Showdata().csv(SubList)
 Reactions().Complex('zink_binding_phosphatase',0,SubList)
 Reactions().Complex('DnaA_initiator_associating_factor',0,SubList)
 Reactions().Complex('DNA_polymerase_III_holoenzyme',0,SubList)
@@ -180,6 +179,9 @@ Reactions().Events(Decompose('chaperone_protein_DnaJ',['DnaJ'],[2],1),events)#ch
 Reactions().Events(Compose('ssDNA_translocase_and_dsDNA_helicase',['UvrD'],[2],5.0e-1),events)#ssDNA translocase and dsDNA helicase
 Reactions().Events(Decompose('ssDNA_translocase_and_dsDNA_helicase',['UvrD'],[2],1),events)#ssDNA translocase and dsDNA helicase
 
+#for i in range(20):
+#    DnaA(mod,10).execute(SubList,location)
+
 #simulation
 Simulation().Run(t, tend, SubList, events, logt, logd, mod)
 
@@ -216,6 +218,7 @@ Showdata().png(['DnaJ','chaperone_protein_DnaJ'], logt, logd, SubList,'default')
 Showdata().png(['UvrD','ssDNA_translocase_and_dsDNA_helicase'], logt, logd, SubList,'default')
 
 #Finalize
+Database(target).Make('default')
 Simulation().Save(mod,SubList)
 Simulation().Makedata('default')
 

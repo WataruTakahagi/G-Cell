@@ -17,13 +17,10 @@ import shutil
 import numpy as np
 import matplotlib.pyplot as plt
 from numpy.random import *
+import random
 
 #import functions
-from functions import Reactions
-from functions import Showdata
-from functions import Simulation
-from functions import Compose
-from functions import Decompose
+from functions import *
 
 class YciV:#RNA/ssDNA exonuclease 5' -> 3'specific
     def __init__(self):
@@ -156,17 +153,17 @@ class DnaA:
     def __init__(self, mod, k):
         self.mod = mod
         self.k = k
-        self.OriC9 = [0,0,0,0,0]
-        self.OriC13 = [0,0,0]
+        self.OriC = [[0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,7],[7,8]]
 
-    def propensity(self, state, k):
-        for i in OriC9:
-            self.k = self.k * i
-        for i in OriC13:
-            self.k = self.k * i
+    def propensity(self, state):
+        self.k = 1
 
-    def execute(self, location, mseq, state):
-        return
+    def execute(self, sublist, location):
+        location = random.choice(self.OriC)[0]
+        Reactions().Increase(location,'DnaA',self.mod,sublist)
+        print self.mod[location,Reactions().Getindex('DnaA',sublist)]
+        print self.mod[location,:]
+        return location
 
 class DNA_polymerase_III_holoenzyme:
     def __init__(self,location,mseq,k):
