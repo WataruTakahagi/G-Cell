@@ -188,12 +188,17 @@ class Database:
         if name == 'default':name = 'gcell_database.csv'
         f = open(name,'w')
         writer = csv.writer(f, lineterminator='\n')
-        for line in self.gcellDB:
-            writer.writerow(line)
+        for line in self.gcellDB:writer.writerow(line)
         f.close()
 
     def Match(self, protein):
-        for i in self.gcellDB:
+        if os.path.exists('gcell_database.csv'):
+            DB = open('gcell_database.csv','r')
+            self.DB = csv.reader(DB)
+        else:
+            print GREEN+"gcell_database.csv "+RED+"NOT EXISTS!"+ENDC
+            sys.exit()
+        for i in self.DB:
             if protein == i[1]:
                 if i[2] in self.seq or i[2][::-1] in self.seq: return 1,i[0]
                 else: return 0,i[0]
@@ -205,13 +210,13 @@ class Compose:
         self.comnum = comnum
         self.k = k
 
-    def propensity(self, state):
+    def propensity(self, state, location):
         self.p = self.k
         for i in range(len(self.components)):
             self.p = self.p * state[Reactions().Getindex(self.components[i],state)][1] ** self.comnum[i]
         return self.p
 
-    def execute(self, state):
+    def execute(self, state, location):
         for i in range(len(self.components)):
             state[Reactions().Getindex(self.components[i],state)][1] -= self.comnum[i]
         state[Reactions().Getindex(self.name,state)][1] += 1
@@ -224,11 +229,11 @@ class Decompose:
         self.comnum = comnum
         self.k = k
 
-    def propensity(self, state):
+    def propensity(self, state, location):
         self.p = self.k * state[Reactions().Getindex(self.name,state)][1]
         return self.p
 
-    def execute(self, state):
+    def execute(self, state, location):
         for i in range(len(self.components)):
             state[Reactions().Getindex(self.components[i],state)][1] += self.comnum[i]
         state[Reactions().Getindex(self.name,state)][1] -= 1
@@ -284,12 +289,12 @@ class Simulation:
     def __init__(self):
         pass
 
-    def step(self, time, state, events):
+    def step(self, time, state, events, location):
         atotal = 0
         alist = []
         for i in range(len(events)):
-                atotal += events[i].propensity(state)
-                alist.append(events[i].propensity(state))
+                atotal += events[i].propensity(state,location)
+                alist.append(events[i].propensity(state,location))
         if atotal == 0:
             print RED+'\ncan\'t continue '+ENDC+': '+BLUE+'Inviable environment'+ENDC
             Simulation().Makedata('default')
@@ -302,12 +307,12 @@ class Simulation:
             a0 += a
             if a0 > r: j = l
             else: l += 1
-        news = events[j].execute(state)
+        news = events[j].execute(state,location)
         return newt, news
 
-    def Run(self, t, tend, SubList, events, logt, logd, mod):
+    def Run(self, t, tend, SubList, events, logt, logd, mod, location):
         while t <= tend:
-            t, SubList = Simulation().step(t, SubList, events)
+            t, SubList = Simulation().step(t, SubList, events, location)
             logt, logd = Showdata().getdata(t, SubList, logt, logd)
         return t, SubList, logt, logd
 
@@ -354,3 +359,4 @@ class Simulation:
         if os.path.exists(pwd+'/npy2csv.py'):shutil.move('npy2csv.py',pwd+"/"+dirname)
         for name in glob.glob('*.png'):shutil.move(name,pwd+"/"+dirname)
         for name in glob.glob('*.csv'):shutil.move(name,pwd+"/"+dirname)
+        if os.path.exists(pwd+"/"+dirname+'/gcell_database.csv'):shutil.move(pwd+"/"+dirname+'/gcell_database.csv',pwd)

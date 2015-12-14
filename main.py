@@ -183,7 +183,7 @@ Reactions().Events(Decompose('ssDNA_translocase_and_dsDNA_helicase',['UvrD'],[2]
 #    DnaA(mod,10).execute(SubList,location)
 
 #simulation
-Simulation().Run(t, tend, SubList, events, logt, logd, mod)
+Simulation().Run(t, tend, SubList, events, logt, logd, mod, location)
 
 #showdata, make .png
 Showdata().png(['YcdX','zink_binding_phosphatase'],logt, logd, SubList,'default')
@@ -216,9 +216,11 @@ Showdata().png(['RecF','RecR','RecO','RecFOR_complex'], logt, logd, SubList,'def
 Showdata().png(['LexA','LexA_DNA_binding_transcriptional_repressor'], logt, logd, SubList,'default')
 Showdata().png(['DnaJ','chaperone_protein_DnaJ'], logt, logd, SubList,'default')
 Showdata().png(['UvrD','ssDNA_translocase_and_dsDNA_helicase'], logt, logd, SubList,'default')
+Showdata().csv(SubList,'label.csv')
+Showdata().csv(logt,'time.csv')
+Showdata().csv(logd,'data.csv')
 
 #Finalize
-Database(target).Make('default')
 Simulation().Save(mod,SubList)
 Simulation().Makedata('default')
 
