@@ -6,3 +6,8 @@ MUTATION = 0.09944662072235663 %
 
 %python main.py
 ```
+
+### You can expand format.py to make your biological simulation model
+```shell
+%python format.py
+```
