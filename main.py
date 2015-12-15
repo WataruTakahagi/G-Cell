@@ -18,6 +18,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from numpy.random import *
 import glob
+import cProfile
 
 #import G-Cell module
 from functions import *
@@ -183,7 +184,8 @@ Reactions().Events(Decompose('ssDNA_translocase_and_dsDNA_helicase',['UvrD'],[2]
 #    DnaA(mod,10).execute(SubList,location)
 
 #simulation
-Simulation().Run(t, tend, SubList, events, logt, logd, mod, location)
+#Simulation().Run(t, tend, SubList, events, logt, logd, mod, location)
+cProfile.run('Simulation().Run(t, tend, SubList, events, logt, logd, mod, location)', 'profile')
 
 #showdata, make .png
 Showdata().png(['YcdX','zink_binding_phosphatase'],logt, logd, SubList,'default')
@@ -216,11 +218,12 @@ Showdata().png(['RecF','RecR','RecO','RecFOR_complex'], logt, logd, SubList,'def
 Showdata().png(['LexA','LexA_DNA_binding_transcriptional_repressor'], logt, logd, SubList,'default')
 Showdata().png(['DnaJ','chaperone_protein_DnaJ'], logt, logd, SubList,'default')
 Showdata().png(['UvrD','ssDNA_translocase_and_dsDNA_helicase'], logt, logd, SubList,'default')
-Showdata().csv(SubList,'label.csv')
-Showdata().csv(logt,'time.csv')
-Showdata().csv(logd,'data.csv')
+#Showdata().csv(SubList,'label.csv')
+#Showdata().csv(logt,'time.csv')
+#Showdata().csv(logd,'data.csv')
 
 #Finalize
+Showdata().csv(SubList,'summary.csv')
 Simulation().Save(mod,SubList)
 Simulation().Makedata('default')
 

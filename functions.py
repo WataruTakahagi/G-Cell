@@ -22,13 +22,14 @@ import random
 
 #General reactions
 class Reactions:
+    original = open('sequence.txt','r').read()
+
     def __init__(self,time=0):
         self.time = time
         self.location = 0
         self.sl = []
         self.evl = []
         self.db = []
-        self.original = open('sequence.txt','r').read()
 
     def setup(self):
         print "------------------------------------------------------------------"
@@ -338,6 +339,14 @@ class Simulation:
         f.write("np.savetxt('result.csv', f, fmt='%.02f',delimiter=',',header=\""+label+"\")\n")
         f.write("print f\n")
         f.close()
+        os.system('chmod +x npy2csv.py')
+        f = open('profile.py','w')
+        f.write("#!/usr/bin/env python\n")
+        f.write("import pstats\n")
+        f.write("p = pstats.Stats('profile')\n")
+        f.write("p.sort_stats('cumulative').print_stats(10)\n")
+        f.close()
+        os.system('chmod +x profile.py')
 
     def Makedata(self, dirname):
         if dirname == 'default':dirname = 'result'
@@ -351,8 +360,8 @@ class Simulation:
                 else: break
         os.mkdir(dirname)
         if os.path.exists(pwd+'/result.npy'):shutil.move('result.npy',pwd+"/"+dirname)
-        if os.path.exists(pwd+'/npy2csv.py'):os.system('chmod +x npy2csv.py')
         if os.path.exists(pwd+'/npy2csv.py'):shutil.move('npy2csv.py',pwd+"/"+dirname)
         for name in glob.glob('*.png'):shutil.move(name,pwd+"/"+dirname)
         for name in glob.glob('*.csv'):shutil.move(name,pwd+"/"+dirname)
+        for name in glob.glob('profile*'):shutil.move(name,pwd+"/"+dirname)
         if os.path.exists(pwd+"/"+dirname+'/gcell_database.csv'):shutil.move(pwd+"/"+dirname+'/gcell_database.csv',pwd)

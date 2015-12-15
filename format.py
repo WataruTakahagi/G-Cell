@@ -27,16 +27,15 @@ from proteins import *
 time, location, SubList, events = Reactions().setup()
 target = Reactions().Target('sequence.txt')
 
-#Generate Monomer
+#Generate Monomer&Complex
 #Reactions().Monomer('monomer',100,SubList,target)
 Reactions().Complex('monomer',100,SubList)#Temporary placement
 Reactions().Complex('complex',0,SubList)
-#Reactions().Complex('name',num,SubList)
+Showdata().csv(SubList)
 
 #Events setting
 Reactions().Events(Compose('complex',['monomer'],[3],1.0e-2),events)
 Reactions().Events(Decompose('complex',['monomer'],[3],1),events)
-#Reactions().Events(eventsetting,events)
 
 #simulation
 seq, mod = Reactions().Readseq(target,SubList)
@@ -45,8 +44,8 @@ Simulation().Run(t, tend, SubList, events, logt, logd, mod, location)
 
 #showdata, make .png
 Showdata().png(['monomer','complex'],logt, logd, SubList,'default')
-#Showdata().png(['name'],logt, logd, SubList,'default')
 
 #Finalize
+Showdata().csv(SubList,'summary.csv')
 Simulation().Save(mod,SubList)
 Simulation().Makedata('default')

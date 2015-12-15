@@ -23,4 +23,4 @@ f.close()
 f2 = open('mutationseq.txt','w')
 f2.write(mutationseq)
 f2.close()
-print RED + 'MUTATION '+ENDC+ '= ' + `float(MUTATION/float(len(target)))*100` + GREEN + ' %' + ENDC
+print RED+'MUTATION '+ENDC+ '= '+`float(MUTATION/float(len(target)))*100`+' ('+`MUTATION`+'/'+`len(target)`+')'+GREEN+' (%)'+ENDC
