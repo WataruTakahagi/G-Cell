@@ -160,10 +160,13 @@ class DnaA:
 
     def execute(self, sublist, location):
         location = random.choice(self.OriC)[0]
-        Reactions().Increase(location,'DnaA',self.mod,sublist)
+        Reactions().ChangeStates('DnaA',location,self.mod,sublist,1)
+        for l in range(location-5,location+5):
+            if location-5 < 0: pass
+            else: Reactions().ChangeStates('ds',l,self.mod,sublist,1)
         print self.mod[location,Reactions().Getindex('DnaA',sublist)]
         print self.mod[location,:]
-        return location
+        return sublist,location
 
 class DNA_polymerase_III_holoenzyme:
     def __init__(self,location,mseq,k):

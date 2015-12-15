@@ -115,12 +115,8 @@ class Reactions:
     def Getbase(self, rg):
         return self.original[rg[0]-1:rg[1]-1]
 
-    def Increase(self, location, name, mod, sublist):
-        mod[location][Reactions().Getindex(name,sublist)] += 1
-        return mod
-
-    def Decrease(self, location, name, mod, sublist):
-        mod[location][Reactions().Getindex(name,sublist)] -= 1
+    def ChangeStates(self, name, location, mod, sublist, num):
+        mod[location][Reactions().Getindex(name,sublist)] = num
         return mod
 
     def Events(self, ev, evlist):
