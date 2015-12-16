@@ -27,19 +27,20 @@ class Reactions:
     def __init__(self,time=0):
         self.time = time
         self.location = 0
-        self.sl = []
+        self.sl = {}
         self.evl = []
         self.db = []
 
     def setup(self):
-        print "------------------------------------------------------------------"
-        print "| "+RED+"A whole-genome based simulation of prokaryotic DNA replication"+ENDC+" |"
-        print "| "+GREEN+"MODEL : "+YELLOW+"Escherichia coli K-12 substr. MG1655                  "+ENDC+" |"
-        print "------------------------------------------------------------------"
+        print "{0:-^69}".format('-')
+        print '| '+"{0:<74}".format(RED+'G-Cell : Genome-based prokaryotic cell simulation platform'+ENDC)+' |'
+        print '| '+"{0:<79}".format(GREEN+'MODEL : '+YELLOW+'Escherichia coli K-12 substr. MG1655, replication'+ENDC)+' |'
+        print "{0:-^69}".format('-')
         return self.time, self.location, self.sl, self.evl
 
     def Target(self,tg):
-        self.tg = tg
+        if not os.path.exists(os.getcwd()+'/mutationseq.txt'):self.tg = 'sequence.txt'
+        else:self.tg = tg
         return self.tg
 
     def Initdata(self):
@@ -87,31 +88,28 @@ class Reactions:
         self.jd,self.gene = Database(target).Match(self.name)
         self.num = num
         if self.jd == 1:
-            print GREEN+'OK '+ENDC+': '+GREEN+"{:<5}".format(self.gene)+ENDC+"{:<3}".format('->')+GREEN+"{:<5}".format(self.name)+ENDC+"{:>33}".format(' = ')+BLUE+`self.num`+ENDC
+            print GREEN+'OK '+ENDC+': '+GREEN+"{:<5}".format(self.gene)+ENDC+"{:<3}".format('->')+GREEN+"{:<5}".format(self.name)+ENDC+"{:>48}".format(' = ')+BLUE+`self.num`+ENDC
         else:
             self.num = 0
-            print RED+'NG '+ENDC+': '+RED+"{:<5}".format(self.gene)+ENDC+"{:<3}".format('-|')+RED+"{:<5}".format(self.name)+ENDC+"{:>33}".format(' = ')+BLUE+`self.num`+ENDC
-        gn = [self.name,self.num]
-        sublist.append(gn)
+            print RED+'NG '+ENDC+': '+RED+"{:<5}".format(self.gene)+ENDC+"{:<3}".format('-|')+RED+"{:<5}".format(self.name)+ENDC+"{:>48}".format(' = ')+BLUE+`self.num`+ENDC
+        sublist[self.name] = self.num
         return sublist
 
     def Complex(self,name,num,complexlist):
         self.name = str(name)
         self.num = num
-        print GREEN+'OK '+ENDC+': '+"{:<52}".format(YELLOW+self.name+ENDC)+' = '+BLUE+`self.num`+ENDC
-        gn = [self.name,self.num]
-        complexlist.append(gn)
+        print GREEN+'OK '+ENDC+': '+"{:<67}".format(YELLOW+self.name+ENDC)+' = '+BLUE+`self.num`+ENDC
+        complexlist[self.name] = self.num
         return complexlist
 
     def Region(self,region,state):
         pass
 
     def Getindex(self, name, sublist):
-        for i in range(len(sublist)):
-            if sublist[i][0] == name: return i
         if name == "ds": return len(sublist)
         if name == "r": return len(sublist)+1
         if name == "l": return len(sublist)+3
+        return sublist[name]
 
     def Getbase(self, rg):
         return self.original[rg[0]-1:rg[1]-1]
@@ -210,13 +208,13 @@ class Compose:
     def propensity(self, state, location):
         self.p = self.k
         for i in range(len(self.components)):
-            self.p = self.p * state[Reactions().Getindex(self.components[i],state)][1] ** self.comnum[i]
+            self.p = self.p * state[self.components[i]] ** self.comnum[i]
         return self.p
 
     def execute(self, state, location):
         for i in range(len(self.components)):
-            state[Reactions().Getindex(self.components[i],state)][1] -= self.comnum[i]
-        state[Reactions().Getindex(self.name,state)][1] += 1
+            state[self.components[i]] -= self.comnum[i]
+        state[self.name] += 1
         return state
 
 class Decompose:
@@ -227,13 +225,13 @@ class Decompose:
         self.k = k
 
     def propensity(self, state, location):
-        self.p = self.k * state[Reactions().Getindex(self.name,state)][1]
+        self.p = self.k * state[self.name]
         return self.p
 
     def execute(self, state, location):
         for i in range(len(self.components)):
-            state[Reactions().Getindex(self.components[i],state)][1] += self.comnum[i]
-        state[Reactions().Getindex(self.name,state)][1] -= 1
+            state[self.components[i]]+= self.comnum[i]
+        state[self.name] -= 1
         return state
 
 class Showdata:
@@ -241,33 +239,35 @@ class Showdata:
         pass
 
     def logger(self, t, sublist, st, et):
-        otime = [t]
-        data = []
-        for i in range(len(sublist)):
-            data.append([sublist[i][1]])
-        self.data = data
-        self.time = otime
-        self.st = st
-        self.et = et
+        otime,data = [t],[]
+        data.append(sublist.values())
+        self.data,self.time,self.st,self.et = data,otime,st,et
         return self.time, self.data, self.st, self.et
 
     def getdata(self, t, sublist, logt, logd):
-        for i in range(len(sublist)):
-            logd[i].append(sublist[i][1])
+        logd.append(sublist.values())
         logt.append(t)
         return logt, logd
 
     def figure(self, name, logt, logd, sublist):
-        for i in range(len(sublist)):
-            if sublist[i][0] == str(name):
-                plt.plot(logt, logd[i][:], label=sublist[i][0])
+        namekey, data = sublist.keys(), []
+        for i in logd:data.append(i[namekey.index(name)])
+        plt.plot(logt, data, label=name)
+
+    def state(self,data,name='default'):
+        if name == 'default':name = 'substances.csv'
+        f, nm, vl = open(name,'w'), data.keys(), data.values()
+        writer = csv.writer(f, lineterminator='\n')
+        for i in range(len(vl)):
+            line = str(nm[i]),str(vl[i])
+            writer.writerow(line)
+        f.close()
 
     def csv(self,data,name='default'):
         if name == 'default':name = 'substances.csv'
         f = open(name,'w')
         writer = csv.writer(f, lineterminator='\n')
-        for line in data:
-            writer.writerow(line)
+        for line in data:writer.writerow(line)
         f.close()
 
     def save(self, name="figure.png"):
@@ -286,7 +286,7 @@ class Simulation:
     def __init__(self):
         pass
 
-    def step(self, time, state, events, location):
+    def step(self, time, state, events, location, mod):
         atotal = 0
         alist = []
         for i in range(len(events)):
@@ -294,6 +294,8 @@ class Simulation:
                 alist.append(events[i].propensity(state,location))
         if atotal == 0:
             print RED+'\ncan\'t continue '+ENDC+': '+BLUE+'Inviable environment'+ENDC
+            Showdata().csv(state,'summary.csv')
+            Simulation().Save(mod,state)
             Simulation().Makedata('default')
             sys.exit()
         tau = float((1/atotal)*math.log1p(1/rand()))
@@ -309,7 +311,7 @@ class Simulation:
 
     def Run(self, t, tend, SubList, events, logt, logd, mod, location):
         while t <= tend:
-            t, SubList = Simulation().step(t, SubList, events, location)
+            t, SubList = Simulation().step(t, SubList, events, location,mod)
             logt, logd = Showdata().getdata(t, SubList, logt, logd)
         return t, SubList, logt, logd
 
@@ -323,9 +325,7 @@ class Simulation:
 
     def Save(self, mod, sublist):
         np.save('result.npy', mod)
-        label = []
-        for name in sublist:
-            label.append(name[0])
+        label = sublist.keys()
         label.append('Double/Single Strand')
         label.append('ReadingOriginal')
         label.append('ReadingReplicated')
@@ -361,6 +361,7 @@ class Simulation:
         os.mkdir(dirname)
         if os.path.exists(pwd+'/result.npy'):shutil.move('result.npy',pwd+"/"+dirname)
         if os.path.exists(pwd+'/npy2csv.py'):shutil.move('npy2csv.py',pwd+"/"+dirname)
+        if os.path.exists(pwd+'/mutationseq.txt'):shutil.move('mutationseq.txt',pwd+"/"+dirname)
         for name in glob.glob('*.png'):shutil.move(name,pwd+"/"+dirname)
         for name in glob.glob('*.csv'):shutil.move(name,pwd+"/"+dirname)
         for name in glob.glob('profile*'):shutil.move(name,pwd+"/"+dirname)

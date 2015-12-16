@@ -81,7 +81,7 @@ Reactions().Monomer('UvrD',600,SubList,target)#ssDNA translocase and dsDNA helic
 Reactions().Monomer('PolA',600,SubList,target)#DNA polymerase I, 5'-->3'polymerase, 5'-->3'and3'-->5'exonuclease(http://ecocyc.org/ECOLI/NEW-IMAGE?type=ENZYME&object=EG10746-MONOMER)
 Reactions().Monomer('NrdA',600,SubList,target)#ribonucleoside diphosphate reductase 1, alpha atom fun subunit dimer(http://ecocyc.org/ECOLI/NEW-IMAGE?type=ENZYME&object=NRDA-MONOMER)
 Reactions().Monomer('PriC',600,SubList,target)#primosomal replication protein N''(http://ecocyc.org/ECOLI/NEW-IMAGE?type=ENZYME&object=EG10765-MONOMER)
-Showdata().csv(SubList)
+#Showdata().csv(SubList)
 Reactions().Complex('zink_binding_phosphatase',0,SubList)
 Reactions().Complex('DnaA_initiator_associating_factor',0,SubList)
 Reactions().Complex('DNA_polymerase_III_holoenzyme',0,SubList)
@@ -116,7 +116,7 @@ Reactions().Complex('ssDNA_translocase_and_dsDNA_helicase',0,SubList)
 
 #Sequence data, Make logger
 seq, mod = Reactions().Readseq(target,SubList)
-logt, logd, t, tend = Showdata().logger(time, SubList, 0, 0.01)
+logt, logd, t, tend = Showdata().logger(time, SubList, 0, 1)
 
 #Events setting
 Reactions().Events(Compose('zink_binding_phosphatase',['YcdX'],[3],1.0e-2),events)#zink-binding phosphatase
@@ -223,7 +223,7 @@ Showdata().png(['UvrD','ssDNA_translocase_and_dsDNA_helicase'], logt, logd, SubL
 #Showdata().csv(logd,'data.csv')
 
 #Finalize
-Showdata().csv(SubList,'summary.csv')
+Showdata().state(SubList,'summary.csv')
 Simulation().Save(mod,SubList)
 Simulation().Makedata('default')
 

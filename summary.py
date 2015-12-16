@@ -8,22 +8,20 @@ RED = '\033[91m'
 ENDC = '\033[0m'
 
 #import public module
-import sys
-import math
-import re
 import csv
 import os
-import shutil
-import numpy as np
-import matplotlib.pyplot as plt
-from numpy.random import *
-import glob
 
 name = raw_input(YELLOW+'Input dir name : '+ENDC)
 if os.path.exists(name):
     os.chdir(os.getcwd()+'/'+name)
     os.system('open *.png')
 else:print GREEN+name+RED+' NOT EXITSTS!!'+ENDC
+if os.path.exists('mutationseq.txt'):
+    f = open('mutationseq.txt','r').read()
+    print BLUE+"{0:-^66}".format('MUTATION')+ENDC
+    MUTATION, target = f.count('M'), f
+    print RED+'MUTATION '+ENDC+ '= '+`float(MUTATION/float(len(target)))*100`+' ('+`MUTATION`+'/'+`len(target)`+')'+GREEN+' (%)'+ENDC
+    print BLUE+"{0:->66}".format('-')+ENDC
 """
 if os.path.exists('substances.csv'):
     f = open('substances.csv','r')
