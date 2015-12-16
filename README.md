@@ -11,3 +11,9 @@ MUTATION = 0.09944662072235663 %
 ```shell
 %python format.py
 ```
+
+### Display summary
+```shell
+%python summary
+Input dir name : result
+```
