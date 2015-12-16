@@ -14,6 +14,6 @@ MUTATION = 0.09944662072235663 %
 
 ### Display summary
 ```shell
-%python summary
+%python summary.py
 Input dir name : result
 ```
