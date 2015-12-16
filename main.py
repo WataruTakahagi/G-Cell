@@ -179,6 +179,7 @@ Reactions().Events(Compose('chaperone_protein_DnaJ',['DnaJ'],[2],5.0e-1),events)
 Reactions().Events(Decompose('chaperone_protein_DnaJ',['DnaJ'],[2],1),events)#chaperone protein DnaJ
 Reactions().Events(Compose('ssDNA_translocase_and_dsDNA_helicase',['UvrD'],[2],5.0e-1),events)#ssDNA translocase and dsDNA helicase
 Reactions().Events(Decompose('ssDNA_translocase_and_dsDNA_helicase',['UvrD'],[2],1),events)#ssDNA translocase and dsDNA helicase
+Reactions().Events(DnaA(mod,0.01),events)
 
 #for i in range(20):
 #    DnaA(mod,10).execute(SubList,location)
@@ -188,6 +189,7 @@ Reactions().Events(Decompose('ssDNA_translocase_and_dsDNA_helicase',['UvrD'],[2]
 cProfile.run('Simulation().Run(t, tend, SubList, events, logt, logd, mod, location)', 'profile')
 
 #showdata, make .png
+Showdata().png(['DnaA'],logt, logd, SubList,'default')
 Showdata().png(['YcdX','zink_binding_phosphatase'],logt, logd, SubList,'default')
 Showdata().png(['DiaA','DnaA_initiator_associating_factor'],logt, logd, SubList,'default')
 Showdata().png(['DnaE','DnaQ','HolE','DNA_polymerase_III_core_enzyme'], logt, logd, SubList,'default')

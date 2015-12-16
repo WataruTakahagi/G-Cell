@@ -70,6 +70,7 @@ class Reactions:
             if self.f[i] == 'M':
                 self.m[i][len(sublist)+1] = 0.28#mutation(r)
                 self.m[i][len(sublist)+3] = 0.78#mutation(l)
+            self.m[i][len(sublist)] = self.m[i][len(sublist)+1]+self.m[i][len(sublist)+3]
         return self.f,self.m
 
     def Baseinfo(self, ID, mod):
@@ -80,7 +81,6 @@ class Reactions:
             for i in range(len(number)):
                 if round((ID-0.2)*100,0) == number[i] or round((ID-0.7)*100,0) == number[i]: self.base = base[i]
             return self.rl,self.base
-            #print Reactions().Baseinfo(mod[i][Reactions().Getindex('r',SubList)],mod)[1]
             #print Reactions().Baseinfo(0.23,mod)
 
     def Monomer(self,name,num,sublist,target):
@@ -102,14 +102,16 @@ class Reactions:
         complexlist[self.name] = self.num
         return complexlist
 
-    def Region(self,region,state):
-        pass
+    def Search(self,name,mod,state):
+
+        return location
 
     def Getindex(self, name, sublist):
         if name == "ds": return len(sublist)
         if name == "r": return len(sublist)+1
         if name == "l": return len(sublist)+3
-        return sublist[name]
+        keylist = sublist.keys()
+        return keylist.index(name)
 
     def Getbase(self, rg):
         return self.original[rg[0]-1:rg[1]-1]
@@ -209,7 +211,7 @@ class Compose:
         self.p = self.k
         for i in range(len(self.components)):
             self.p = self.p * state[self.components[i]] ** self.comnum[i]
-        return self.p
+        return self.p,location
 
     def execute(self, state, location):
         for i in range(len(self.components)):
@@ -226,7 +228,7 @@ class Decompose:
 
     def propensity(self, state, location):
         self.p = self.k * state[self.name]
-        return self.p
+        return self.p,location
 
     def execute(self, state, location):
         for i in range(len(self.components)):
@@ -290,8 +292,8 @@ class Simulation:
         atotal = 0
         alist = []
         for i in range(len(events)):
-                atotal += events[i].propensity(state,location)
-                alist.append(events[i].propensity(state,location))
+                atotal += events[i].propensity(state,location)[0]
+                alist.append(events[i].propensity(state,location)[0])
         if atotal == 0:
             print RED+'\ncan\'t continue '+ENDC+': '+BLUE+'Inviable environment'+ENDC
             Showdata().csv(state,'summary.csv')
