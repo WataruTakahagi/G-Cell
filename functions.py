@@ -70,7 +70,6 @@ class Reactions:
             if self.f[i] == 'M':
                 self.m[i][len(sublist)+1] = 0.28#mutation(r)
                 self.m[i][len(sublist)+3] = 0.78#mutation(l)
-            self.m[i][len(sublist)] = self.m[i][len(sublist)+1]+self.m[i][len(sublist)+3]
         return self.f,self.m
 
     def Baseinfo(self, ID, mod):
@@ -103,7 +102,6 @@ class Reactions:
         return complexlist
 
     def Search(self,name,mod,state):
-
         return location
 
     def Getindex(self, name, sublist):
@@ -283,6 +281,9 @@ class Showdata:
         if pngname == 'default':self.pngname = figlist[-1]+'.png'
         else: self.pngname = pngname+'.png'
         Showdata().save(self.pngname)
+
+    def genome_reader(self,mod,sublist,namelist):
+        pass
 
 class Simulation:
     def __init__(self):

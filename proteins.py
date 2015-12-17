@@ -22,40 +22,61 @@ import random
 #import functions
 from functions import *
 
+class General:
+    def __init__(self):
+        pass
+
+    def Walk(self,name,location,mod,sublist,l):
+        Reactions().ChangeStates(name,location,mod,sublist,0)
+        Reactions().ChangeStates(name,location+l,mod,sublist,1)
+        return location+l
+
+    def RingOpen(self,mod,sublist,location,lg):
+        for l in range(location,location+lg):
+            if location < 0:Reactions().ChangeStates('ds',len(mod)+l,mod,sublist,1)
+            elif len(mod) < location:Reactions().ChangeStates('ds',l-len(mod),mod,sublist,1)
+            else:Reactions().ChangeStates('ds',l,mod,sublist,1)
+
 class DnaA:
+    OriC = [[100,120],[120,121],[130,131],[150,151],[160,161],[170,171],[180,181],[410,411]]
     def __init__(self, mod, k):
         self.mod = mod
         self.k = k
-        self.OriC = [[0,1],[20,21],[30,31],[40,41],[50,51],[60,61],[70,71],[80,81]]
-        self.location = random.choice(self.OriC)[0]
 
     def propensity(self, state, location):
-        self.p = self.k * state['DnaA']*self.mod[self.location][len(state)]
-        return self.p,self.location
+        self.p = self.k * state['DnaA']
+        return self.p,location
 
     def execute(self, sublist, location):
-        Reactions().ChangeStates('DnaA',self.location,self.mod,sublist,1)
-        for l in range(self.location-5,self.location+5):
-            if location-5 < 0: pass
-            else: Reactions().ChangeStates('ds',l,self.mod,sublist,1)
+        location = random.choice(self.OriC)[0]
+        Reactions().ChangeStates('DnaA',location,self.mod,sublist,1)
+        General().RingOpen(self.mod,sublist,location,5)
         sublist['DnaA'] -= 1
-        print "DnaA FIRE"
         return sublist
 
 class primosome:
-    def __init__(self,mod,k):
+    def __init__(self,mod,sublist,k):
         self.mod = mod
         self.k = k
+        self.life = 100
+        if len(np.nonzero(self.mod.T[Reactions().Getindex('DnaA',sublist)])[0]) == 0:self.location = 0
+        else: self.location = random.choice(np.nonzero(self.mod.T[Reactions().Getindex('DnaA',sublist)])[0])
 
-    def propensity(self, state):
-        self.p = self.k * state['primosome'][1]
-        return self.p
+    def propensity(self, state, location):
+        self.p = self.k * state['primosome']
+        return self.p, self.location
 
-    def execute(self, state):
-        if self.location >= 1 : mseq[self.location-1][Reactions().Getindex('primosome',state)] = 0
-        self.mseq[self.location][Reactions().Getindex('primosome',state)] = 1
-        self.mseq[self.location][Reactions().Getindex('ds',state)] = 1
-        return self.location, self.mseq, state
+    def execute(self, sublist, location):
+        location = self.location
+        Reactions().ChangeStates('primosome',location,self.mod,sublist,1)
+        General().RingOpen(self.mod,sublist,location,1)
+        General().Walk('primosome',self.location,self.mod,sublist,1)
+        self.life -= 1
+        if self.life == 0 :
+            sublist['primosome'] -= 1
+            self.life = 100
+        self.location += 1
+        return sublist
 
 class DNA_polymerase_III_holoenzyme:
     def __init__(self,location,mseq,k):

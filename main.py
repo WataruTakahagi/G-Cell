@@ -81,7 +81,6 @@ Reactions().Monomer('UvrD',600,SubList,target)#ssDNA translocase and dsDNA helic
 Reactions().Monomer('PolA',600,SubList,target)#DNA polymerase I, 5'-->3'polymerase, 5'-->3'and3'-->5'exonuclease(http://ecocyc.org/ECOLI/NEW-IMAGE?type=ENZYME&object=EG10746-MONOMER)
 Reactions().Monomer('NrdA',600,SubList,target)#ribonucleoside diphosphate reductase 1, alpha atom fun subunit dimer(http://ecocyc.org/ECOLI/NEW-IMAGE?type=ENZYME&object=NRDA-MONOMER)
 Reactions().Monomer('PriC',600,SubList,target)#primosomal replication protein N''(http://ecocyc.org/ECOLI/NEW-IMAGE?type=ENZYME&object=EG10765-MONOMER)
-#Showdata().csv(SubList)
 Reactions().Complex('zink_binding_phosphatase',0,SubList)
 Reactions().Complex('DnaA_initiator_associating_factor',0,SubList)
 Reactions().Complex('DNA_polymerase_III_holoenzyme',0,SubList)
@@ -116,9 +115,10 @@ Reactions().Complex('ssDNA_translocase_and_dsDNA_helicase',0,SubList)
 
 #Sequence data, Make logger
 seq, mod = Reactions().Readseq(target,SubList)
-logt, logd, t, tend = Showdata().logger(time, SubList, 0, 1)
+logt, logd, t, tend = Showdata().logger(time, SubList, 0, 60)
 
 #Events setting
+
 Reactions().Events(Compose('zink_binding_phosphatase',['YcdX'],[3],1.0e-2),events)#zink-binding phosphatase
 Reactions().Events(Decompose('zink_binding_phosphatase',['YcdX'],[3],1),events)#zink-binding phosphatase
 Reactions().Events(Compose('DnaA_initiator_associating_factor',['DiaA'],[4],1.0e-4),events)#DnaA initiator-associating factor
@@ -179,10 +179,9 @@ Reactions().Events(Compose('chaperone_protein_DnaJ',['DnaJ'],[2],5.0e-1),events)
 Reactions().Events(Decompose('chaperone_protein_DnaJ',['DnaJ'],[2],1),events)#chaperone protein DnaJ
 Reactions().Events(Compose('ssDNA_translocase_and_dsDNA_helicase',['UvrD'],[2],5.0e-1),events)#ssDNA translocase and dsDNA helicase
 Reactions().Events(Decompose('ssDNA_translocase_and_dsDNA_helicase',['UvrD'],[2],1),events)#ssDNA translocase and dsDNA helicase
-Reactions().Events(DnaA(mod,0.01),events)
 
-#for i in range(20):
-#    DnaA(mod,10).execute(SubList,location)
+Reactions().Events(DnaA(mod,0.01),events)
+Reactions().Events(primosome(mod,SubList,0.7),events)
 
 #simulation
 #Simulation().Run(t, tend, SubList, events, logt, logd, mod, location)
@@ -190,6 +189,7 @@ cProfile.run('Simulation().Run(t, tend, SubList, events, logt, logd, mod, locati
 
 #showdata, make .png
 Showdata().png(['DnaA'],logt, logd, SubList,'default')
+#Showdata().png(['primosome'],logt, logd, SubList,'default')
 Showdata().png(['YcdX','zink_binding_phosphatase'],logt, logd, SubList,'default')
 Showdata().png(['DiaA','DnaA_initiator_associating_factor'],logt, logd, SubList,'default')
 Showdata().png(['DnaE','DnaQ','HolE','DNA_polymerase_III_core_enzyme'], logt, logd, SubList,'default')
@@ -225,10 +225,9 @@ Showdata().png(['UvrD','ssDNA_translocase_and_dsDNA_helicase'], logt, logd, SubL
 #Showdata().csv(logd,'data.csv')
 
 #Finalize
+print np.nonzero(mod.T[Reactions().Getindex('ds',SubList)])[0]
+print np.nonzero(mod.T[Reactions().Getindex('DnaA',SubList)])[0]
+print np.nonzero(mod.T[Reactions().Getindex('primosome',SubList)])[0]
 Showdata().state(SubList,'summary.csv')
 Simulation().Save(mod,SubList)
 Simulation().Makedata('default')
-
-#Reactions().Increase(0,'DnaB',mod,SubList)
-#Reactions().Increase(0,'DnaB',mod,SubList)
-#Reactions().Decrease(0,'DnaA',mod,SubList)
