@@ -56,20 +56,20 @@ class Reactions:
         self.m = np.zeros((len(self.f),len(sublist)+5))
         for i in range(len(self.f)):
             if self.f[i] == 'a':
-                self.m[i][len(sublist)+1] = 0.23#a(r)
-                self.m[i][len(sublist)+3] = 0.76#t(l)
+                self.m[i][Reactions().Getindex('r',sublist)] = 0.23#a(r)
+                self.m[i][Reactions().Getindex('l',sublist)] = 0.76#t(l)
             if self.f[i] == 't':
-                self.m[i][len(sublist)+1] = 0.26#t(r)
-                self.m[i][len(sublist)+3] = 0.73#a(l)
+                self.m[i][Reactions().Getindex('r',sublist)] = 0.26#t(r)
+                self.m[i][Reactions().Getindex('l',sublist)] = 0.73#a(l)
             if self.f[i] == 'g':
-                self.m[i][len(sublist)+1] = 0.24#g(r)
-                self.m[i][len(sublist)+3] = 0.75#c(l)
+                self.m[i][Reactions().Getindex('r',sublist)] = 0.24#g(r)
+                self.m[i][Reactions().Getindex('l',sublist)] = 0.75#c(l)
             if self.f[i] == 'c':
-                self.m[i][len(sublist)+1] = 0.25#c(r)
-                self.m[i][len(sublist)+3] = 0.74#g(l)
+                self.m[i][Reactions().Getindex('r',sublist)] = 0.25#c(r)
+                self.m[i][Reactions().Getindex('l',sublist)] = 0.74#g(l)
             if self.f[i] == 'M':
-                self.m[i][len(sublist)+1] = 0.28#mutation(r)
-                self.m[i][len(sublist)+3] = 0.78#mutation(l)
+                self.m[i][Reactions().Getindex('r',sublist)] = 0.28#mutation(r)
+                self.m[i][Reactions().Getindex('l',sublist)] = 0.78#mutation(l)
         return self.f,self.m
 
     def Baseinfo(self, ID, mod):
@@ -107,7 +107,9 @@ class Reactions:
     def Getindex(self, name, sublist):
         if name == "ds": return len(sublist)
         if name == "r": return len(sublist)+1
+        if name == "r`": return len(sublist)+2
         if name == "l": return len(sublist)+3
+        if name == "l`": return len(sublist)+4
         keylist = sublist.keys()
         return keylist.index(name)
 

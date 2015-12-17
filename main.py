@@ -179,9 +179,9 @@ Reactions().Events(Compose('chaperone_protein_DnaJ',['DnaJ'],[2],5.0e-1),events)
 Reactions().Events(Decompose('chaperone_protein_DnaJ',['DnaJ'],[2],1),events)#chaperone protein DnaJ
 Reactions().Events(Compose('ssDNA_translocase_and_dsDNA_helicase',['UvrD'],[2],5.0e-1),events)#ssDNA translocase and dsDNA helicase
 Reactions().Events(Decompose('ssDNA_translocase_and_dsDNA_helicase',['UvrD'],[2],1),events)#ssDNA translocase and dsDNA helicase
-
 Reactions().Events(DnaA(mod,0.01),events)
 Reactions().Events(primosome(mod,SubList,0.7),events)
+Reactions().Events(DNA_polymerase_III_holoenzyme(mod,SubList,0.5),events)
 
 #simulation
 #Simulation().Run(t, tend, SubList, events, logt, logd, mod, location)
@@ -228,6 +228,7 @@ Showdata().png(['UvrD','ssDNA_translocase_and_dsDNA_helicase'], logt, logd, SubL
 print np.nonzero(mod.T[Reactions().Getindex('ds',SubList)])[0]
 print np.nonzero(mod.T[Reactions().Getindex('DnaA',SubList)])[0]
 print np.nonzero(mod.T[Reactions().Getindex('primosome',SubList)])[0]
+print np.nonzero(mod.T[Reactions().Getindex('DNA_polymerase_III_holoenzyme',SubList)])[0]
 Showdata().state(SubList,'summary.csv')
 Simulation().Save(mod,SubList)
 Simulation().Makedata('default')
